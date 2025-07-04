@@ -1,1 +1,1 @@
-# Are-Checklists-Really-Useful-for-Automatic-Evaluation-of-Generative-Tasks-
+# Are Checklists Really Useful for Automatic Evaluation of Generative Tasks?
