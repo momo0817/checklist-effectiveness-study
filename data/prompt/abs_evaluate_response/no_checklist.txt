@@ -1,0 +1,26 @@
+Please evaluate the following response according to the procedure below:
+
+1. Evaluate the response to the input on a scale of 1 (lowest) to 5 (highest).
+2. First, state the reason for your evaluation. Then provide the overall rating (1–5).
+3. Use the following guidelines for each rating:
+    Rating-1 (Very Bad): The model’s response is entirely irrelevant to the input posed. It demonstrates no understanding of the requested task. 
+    Rating-2 (Bad): While there is a minimal degree of relevance to the original input, the response is predominantly incorrect, confusing, or both. 
+    Rating-3 (Okay): The response shows some relation to the posed input but lacks critical details or includes inaccuracies. 
+    Rating-4 (Good): This rating is given when the response is mostly accurate and comprehensive. However, it might include slight errors or omit minor details. 
+    Rating-5 (Excellent): A response receiving this rating is entirely accurate, detailed, and aligns perfectly with the requirements of the input.
+4. Output your response in the following JSON format:
+```json
+{{
+    "reason": "Explain the rationale for the rating",
+    "rating": 3
+}}
+```
+5. Do NOT output anything other than the JSON format.
+
+[Start of Input]
+{question}
+[End of Input]
+
+[Start of Response]
+{response}
+[End of Response]

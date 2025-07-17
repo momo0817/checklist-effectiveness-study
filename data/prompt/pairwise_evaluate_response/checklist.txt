@@ -1,0 +1,42 @@
+Please evaluate the answers according to the following procedure:
+
+1. Evaluate the two responses to the input.
+2. Use the given checklist for your evaluation.
+3. For each item in the checklist, output "yes", "no", or "n/a" if it does not apply.
+4. Compare the two responses based on the checklist.
+5. Decide which answer is better: 1 or 2.
+6. Output your response in the following JSON format:
+```json
+{{
+    "checklist": {{
+        "response_1": {{
+            "1": "yes",
+            "2": "no",
+            "3": "n/a"
+        }},
+        "response_2": {{
+            "1": "no",
+            "2": "n/a",
+            "3": "yes,
+        }}
+    }}
+    "judge": 1,
+}}
+```
+7. Do not output anything other than the JSON format.
+
+[Start of Input]
+{question}
+[End of Input]
+
+[Start of Checklist]
+{checklist}
+[End of Checklist]
+
+[Start of Response 1]
+{response_1}
+[End of Response 1]
+
+[Start of Response 2]
+{response_2}
+[End of Response 2]

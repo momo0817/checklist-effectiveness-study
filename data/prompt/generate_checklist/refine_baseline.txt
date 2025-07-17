@@ -1,0 +1,28 @@
+Please refine the given checklist for evaluating the AI’s response according to the following steps:
+
+1. Evaluate each checklist item based on the requirements below.
+
+Checklist questions should:
+  - **Be answerable by ’yes’ or ’no’**, with ’yes’ meaning that the response successfully met the corresponding requirement. 
+  - **Be comprehensive, but concise**, meaning that all criteria directly relevant to the input should be represented by a question, but only questions that are very clearly relevant should be included. 
+  - **Be precise**, meaning that checklist questions should avoid vague wording and evaluate specific aspects of a response, directly using the phrasing of the input where appropriate.
+
+2. Rate each checklist item on a 5-point scale (1 = lowest, 5 = highest) and provide feedback. Present your evaluation using the format below:
+
+Checklist Evaluation:
+  1. [Item 1] - [Rating]: [Feedback]
+  2. [Item 2] - [Rating]: [Feedback]
+
+3. Refine the checklist based on this feedback. Enclose each checklist item in double square brackets and output them in the following format:
+
+Refined Checklist:
+  - [[Item 1]]
+  - [[Item 2]]
+
+[Start of Input]
+{question}
+[End of Input]
+
+[Start of Base Checklist]
+{checklist}
+[End of Base Checklist]

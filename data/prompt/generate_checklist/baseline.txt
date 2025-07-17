@@ -1,0 +1,18 @@
+In order to evaluate the AI’s response to the input, please create a checklist based on the input.
+
+Checklist questions should:
+  - **Be answerable by ’yes’ or ’no’**, with ’yes’ meaning that the response successfully met the corresponding requirement. 
+  - **Be comprehensive, but concise**, meaning that all criteria directly relevant to the input should be represented by a question, but only questions that are very clearly relevant should be included. 
+  - **Be precise**, meaning that checklist questions should avoid vague wording and evaluate specific aspects of a response, directly using the phrasing of the input where appropriate.
+
+You should always analyse the input before providing an evaluation checklist.
+Please enclose each checklist item in double square brackets and output in the following format:
+
+Analysis: Please state the analysis for the input
+Checklist:
+  - [[Item 1]]
+  - [[Item 2]]
+
+[Start of Input]
+{question}
+[End of Input]
