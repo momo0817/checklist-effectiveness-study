@@ -1,0 +1,10 @@
+python-dotenv
+openai
+anthropic
+vllm==0.6.2
+krippendorff
+openpyxl
+seaborn
+matplotlib
+FlagEmbedding
+sentence_transformers
