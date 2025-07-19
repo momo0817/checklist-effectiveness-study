@@ -1,6 +1,6 @@
+import argparse
 import os
 import random
-import argparse
 
 from utils.data import load_json, save_json
 
@@ -45,11 +45,12 @@ def load_args():
     )
 
     parser.add_argument(
-        "--output-dir",
+        "--output-path",
         type=str,
         help="Path to the output file",
-        default="./LLMBar/Dataset/Sample",
+        default="./Dataset/LLMBar/dataset.json",
     )
+     
 
     return parser.parse_args()
 
@@ -77,8 +78,8 @@ def main():
         all_samples.extend(dataset)
 
     print(f"Number of all samples: {len(all_samples)}")
-    os.makedirs(os.path.join(args.output_dir, "All"), exist_ok=True)
-    save_json(os.path.join(args.output_dir, "All", "dataset.json"), all_samples)
+    os.makedirs(args.output_path, exist_ok=True)
+    save_json(args.output_path, all_samples)
 
 
 if __name__ == "__main__":

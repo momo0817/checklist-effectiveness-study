@@ -21,10 +21,10 @@ def load_args():
         default="./InFoBench/expert_annotation",
     )
     args.add_argument(
-        "--output-dir",
+        "--output-path",
         type=str,
-        help="Path to the output file",
-        default="./data/dataset/InFoBench/expert_annotation",
+        help="Path to the output path",
+        default="./Dataset/InFoBench/dataset.json",
     )
 
     args.add_argument(
@@ -99,9 +99,9 @@ def main():
         for d in decompose(df):
             d["subset"] = difficulty  # 難易度情報は保持
             all_data.append(d)
-    output_path = os.path.join(args.output_dir, "all", "dataset.json")
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    save_json(output_path, all_data)
+
+    os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
+    save_json(args.output_path, all_data)
 
 
 if __name__ == "__main__":
