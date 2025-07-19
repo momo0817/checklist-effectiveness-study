@@ -27,18 +27,18 @@ OPENAI_API_BASE=your_api_base
 ### LLMBar
 
 ```
-python3 src/sample_llmbar.py --llmbar-dir ./LLMBar/Dataset/ --output-dir ./LLMBar/Dataset/Sample
+python3 src/experiment/sample_llmbar.py --llmbar-dir ./LLMBar/Dataset/ --output-path ./Dataset/LLMBar/dataset.json
 ```
 ### InFoBench
 ```
-python3 src/sample_infobench.py --infobench-dir ./InFoBench/expert_annotation --output-dir ./data/dataset/InFoBench/expert_annotation
+python3 src/experiment/sample_infobench.py --infobench-dir ./InFoBench/expert_annotation --output-path ./Dataset/InFoBench/dataset.json
 ```
 
 ## Experiment
 ---
 We can generate checklist and evaluate response using bellow shell.
 ```
-./example/experiment.sh <checklist_model_name> <eval_model_name> <dataset_sub_dir> <checklist_type>
+./shell_script/experiment/experiment.sh <checklist_model_name> <eval_model_name>  <checklist_type>
 ```
 -  checklist_model_name: to generate checklist model 
 -  eval_model_name: to evaluate response model 
@@ -53,57 +53,51 @@ We can generate checklist and evaluate response using bellow shell.
 
 ### Example 1 (Dataset type: Pairwise comparison, Prompt: Baseline or Ticking or Specify)
 ```
-./example/normal_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 specify
+./shell_script/experiment/normal_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 specify
 ```
 - Checklist generaliton model: gpt-4o-2024-08-06
 - Evaluation model: gpt-4o-2024-08-06
-- Dataset: Sample
 - Checklist type: specify
 
 ### Example 2 (Dataset type: Pairwise comparison, Prompt: Self-refine)
 ```
-./example/refine_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 Sample baseline
+./shell_script/experiment/refine_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 baseline
 ```
 - Checklist generaliton model: gpt-4o-2024-08-06
 - Evaluation model: gpt-4o-2024-08-06
-- Dataset: Sample
 - Checklist type: baseline
 
 ### Example 3 (Dataset type: Pairwise comparison, Prompt: checklist Length (0.5, 1.5))
 ```
-./example/adjust_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 Sample baseline
+./shell_script/experiment/adjust_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 baseline
 ```
 - Checklist generaliton model: gpt-4o-2024-08-06
 - Evaluation model: gpt-4o-2024-08-06
-- Dataset: Sample
 - Checklist type: baseline
 
 
 ### Example 4 (Dataset type: Direct Scoring, Prompt: Baseline or Ticking or Specify)
 ```
-./example/abs_normal_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 InFoBench/expert_annotation baseline
+./shell_script/experiment/abs_normal_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 baseline
 ```
 - Checklist generaliton model: gpt-4o-2024-08-06
 - Evaluation model: gpt-4o-2024-08-06
-- Dataset: Sample
 - Checklist type: baseline
 
 ### Example 5 (Dataset type: Direct Scoring, Prompt: Self-refine)
 ```
-./example/abs_refine_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 Sample baseline
+./shell_script/experiment/abs_refine_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 baseline
 ```
 - Checklist generaliton model: gpt-4o-2024-08-06
 - Evaluation model: gpt-4o-2024-08-06
-- Dataset: Sample
 - Checklist type: baseline
 
 ### Example 6 (Dataset type: Direct Scoring, Prompt: Checklist Length (0.5, 1.5))
 ```
-./example/abs_adjust_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 Sample baseline
+./shell_script/experiment/abs_adjust_experiment.sh gpt-4o-2024-08-06 gpt-4o-2024-08-06 baseline
 ```
 - Checklist generaliton model: gpt-4o-2024-08-06
 - Evaluation model: gpt-4o-2024-08-06
-- Dataset: Sample
 - Checklist type: baseline
 
 
