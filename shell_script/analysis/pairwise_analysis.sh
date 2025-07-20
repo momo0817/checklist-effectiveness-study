@@ -1,6 +1,6 @@
 python3 src/analysis/pairwise/calc_pairwise_acc.py \
 
-python3 src/analysis/pairwise/verify_checklist_pairwise.py \
+python3 src/analysis/pairwise/verify_checklist.py \
 
 python3 analysis/src/pairwise/classificate_subset.py \
 
