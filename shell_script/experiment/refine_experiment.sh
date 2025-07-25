@@ -23,7 +23,7 @@ echo "Simple evaluation model name: ${SIMPLE_EVAL_MODEL_NAME}"
 DATASET_PATH="./Dataset/LLMBar/dataset.json"
 
 echo "Evaluating without checklist..."
-BASELINE_EVAL_OUTPUT_PATH="./outputs/evaluation/baseline/LLMBar/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
+BASELINE_EVAL_OUTPUT_PATH="./outputs/evaluation/no_checklist/LLMBar/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 echo "Baseline eval output path: ${BASELINE_EVAL_OUTPUT_PATH}"
 python3 src/experiment/evaluate_response.py \
     --model-name-or-path ${EVAL_MODEL_NAME} \
@@ -33,7 +33,7 @@ python3 src/experiment/evaluate_response.py \
     -n 10
 
 echo "Generating checklist..."
-CHECKLIST_PROMPT_PATH="data/prompt/generate_checklist/${CHECKLIST_TYPE}.txt"
+CHECKLIST_PROMPT_PATH="./data/prompt/generate_checklist/${CHECKLIST_TYPE}.txt"
 CHECKLIST_PATH="./outputs/checklist/${CHECKLIST_TYPE}/LLMBar/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
 echo "Checklist path: ${CHECKLIST_PATH}"
 python3 src/experiment/generate_checklist.py \
@@ -43,7 +43,7 @@ python3 src/experiment/generate_checklist.py \
     --output-path ${CHECKLIST_PATH}
 
 echo "Refine checklist..."
-REFINE_CHECKLIST_PROMPT_PATH="data/prompt/generate_checklist/refine_${CHECKLIST_TYPE}.txt"
+REFINE_CHECKLIST_PROMPT_PATH="./data/prompt/generate_checklist/refine_${CHECKLIST_TYPE}.txt"
 REFINE_CHECKLIST_PATH="./outputs/checklist/refine_${CHECKLIST_TYPE}/LLMBar/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
 echo "Refine checklist path: ${REFINE_CHECKLIST_PATH}"
 python3 src/experiment/refine_checklist.py \

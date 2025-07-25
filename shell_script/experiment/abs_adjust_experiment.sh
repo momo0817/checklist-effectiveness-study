@@ -24,7 +24,7 @@ echo "Simple evaluation model name: ${SIMPLE_EVAL_MODEL_NAME}"
 DATASET_PATH="./Dataset/InFoBench/dataset.json"
 
 echo "Evaluating without checklist..."
-BASELINE_EVAL_OUTPUT_PATH="./outputs/abs_evaluation/baseline/InFoBench/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
+BASELINE_EVAL_OUTPUT_PATH="./outputs/abs_evaluation/no_checklist/InFoBench/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 echo "Baseline eval output path: ${BASELINE_EVAL_OUTPUT_PATH}"
 python3 src/experiment/abs_evaluate_response.py \
     --model-name-or-path ${EVAL_MODEL_NAME} \
@@ -34,7 +34,7 @@ python3 src/experiment/abs_evaluate_response.py \
     -n 5
 
 echo "Generating checklist..."
-CHECKLIST_PROMPT_PATH="data/prompt/generate_checklist/${CHECKLIST_TYPE}.txt"
+CHECKLIST_PROMPT_PATH="./data/prompt/generate_checklist/${CHECKLIST_TYPE}.txt"
 CHECKLIST_PATH="./outputs/checklist/${CHECKLIST_TYPE}/InFoBench/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
 echo "Checklist path: ${CHECKLIST_PATH}"
 python3 src/experiment/generate_checklist.py \
@@ -44,7 +44,7 @@ python3 src/experiment/generate_checklist.py \
     --output-path ${CHECKLIST_PATH}
 
 echo "Adjust checklist..."
-ADJUST_CHECKLIST_PROMPT_PATH="data/prompt/adjust_checklist/adjust_${CHECKLIST_TYPE}.txt"
+ADJUST_CHECKLIST_PROMPT_PATH="./data/prompt/adjust_checklist/adjust_${CHECKLIST_TYPE}.txt"
 ADJUST_CHECKLIST_PATH="./outputs/checklist/adjust_${FACTOR}_${CHECKLIST_TYPE}/InFoBench/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
 echo "Adjust checklist path: ${ADJUST_CHECKLIST_PATH}"
 python3 src/experiment/adjust_checklist.py \
