@@ -17,7 +17,7 @@ echo "Simple evaluation model name: ${SIMPLE_EVAL_MODEL_NAME}"
 echo "Calulating pairwise accuracy..."
 ACCURACY_OUTPUT_PATH="./outputs/analysis/pairwise/accuracy.xlsx"
 echo "Accuracy output path: ${ACCURACY_OUTPUT_PATH}"
-BOOTSTRAP_OUTPUT_PATH="./outputs/analysis/bootstrap/results.csv"
+BOOTSTRAP_OUTPUT_PATH="./outputs/analysis/bootstrap/pairwise_results.csv"
 echo "Bootstrap output path: ${BOOTSTRAP_OUTPUT_PATH}"
 
 python3 src/analysis/pairwise/calc_pairwise_acc.py \

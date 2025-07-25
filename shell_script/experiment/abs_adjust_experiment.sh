@@ -8,7 +8,7 @@ fi
 
 CHECKLIST_MODEL_NAME=$1 # e.g. gpt-4o-2024-08-06
 EVAL_MODEL_NAME=$2 # e.g. gpt-4o-2024-08-06 or meta-llama/Llama-3.1-8B-Instruct
-CHECKLIST_TYPE=$3 # e.g. detail
+CHECKLIST_TYPE=$3 # e.g. specify
 FACTOR=${5:-1.5}  
 
 echo "Checklist model name: ${CHECKLIST_MODEL_NAME}"
