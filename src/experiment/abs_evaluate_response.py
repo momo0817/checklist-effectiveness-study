@@ -24,13 +24,13 @@ def load_args():
         "--checklist-path",
         type=str,
         help="Path to the checklist",
-        default="./outputs/checklist/baseline/InFoBench_expert_annotation/gpt-4o-2024-08-06.jsonl",
+        default="./outputs/checklist/baseline/InFoBench/gpt-4o-2024-08-06.jsonl",
     )
     parser.add_argument(
         "--output-path",
         type=str,
         help="Path to the output file",
-        default="./outputs/abs_evaluation/baseline/InFoBench_expert_annotation/gpt-4o-2024-08-06.jsonl",
+        default="./outputs/abs_evaluation/baseline/InFoBench/gpt-4o-2024-08-06.jsonl",
     )
 
     parser.add_argument(

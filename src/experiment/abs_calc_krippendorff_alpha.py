@@ -15,7 +15,7 @@ def load_args():
         "--absolute-rating-path",
         type=str,
         help="Path to the dataset",
-        default="./outputs/abs_evaluation/baseline/InFoBench_expert_annotation/gpt-4o-2024-08-06.jsonl",
+        default="./outputs/abs_evaluation/baseline/InFoBench/gpt-4o-2024-08-06.jsonl",
     )
 
     return parser.parse_args()
