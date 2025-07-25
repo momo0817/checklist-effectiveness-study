@@ -38,18 +38,19 @@ python3 src/experiment/sample_infobench.py --infobench-dir ./InFoBench/expert_an
 ---
 We can generate checklist and evaluate response using bellow shell.
 ```
-./shell_script/experiment/experiment.sh <checklist_model_name> <eval_model_name>  <checklist_type>
+./shell_script/experiment/**_experiment.sh <checklist_model_name> <eval_model_name>  <checklist_type>
 ```
 -  checklist_model_name: to generate checklist model 
 -  eval_model_name: to evaluate response model 
 -  dataset: dataset sub dir
 -  checklist_type: we choose six method
     - baseline: our baseline
-    - specify: 
-    - refine_baseline:
-    - checklist_length_0.5: 
-    - checklist_length_1.5: 
-    - ticking: 
+    - specify: we add to the baseline that checklist questions should be designed considering possible responses to the input.
+    - refine_baseline:  a Likert scale evaluation and accompanying feedback based on the baseline prompt and uses this feedback to regenerate improved checklists.
+    - checklist_length_0.5: Adjust the length of the baseline checklist to 0.5 times its original size.
+    - checklist_length_1.5: Adjust the length of the baseline checklist to 1.5 times its original size.
+    - ticking: . TICKing All the Boxes: Generated Checklists Improve LLM Evaluation and Generation's prompt 
+     - their paper: https://arxiv.org/abs/2410.03608
 
 ### Example 1 (Dataset type: Pairwise comparison, Prompt: Baseline or Ticking or Specify)
 ```
@@ -106,10 +107,14 @@ We can generate checklist and evaluate response using bellow shell.
 ## Analysis
 
 ### Pairwise Comparison Dataset
-
+```
+./shell_script/analysis/pairwise_analysis.sh
+```
 
 ### Direct Scoring Dataset
-
+```
+./shell_script/analysis/scoring_analysis.sh
+```
 
 ## Citation
 ```
