@@ -78,31 +78,36 @@ def main():
     args = load_args()
 
     file_paths = glob.glob(os.path.join(args.infobench_dir, "*.csv"))
-
-    all_data = []
-    for file_path in file_paths:
-        if "Easy" in os.path.basename(file_path):
-            difficulty = "easy"
-        elif "Hard" in os.path.basename(file_path):
-            difficulty = "hard"
-        else:
-            raise ValueError("Unknown difficulty")
-
-        df = pd.read_csv(file_path)
-        df = df.head(25)
-        df = df.where(pd.notnull(df), None)
-
-        # Shuffle the dataframe
-        df = df.sample(frac=1, random_state=args.seed).reset_index(drop=True)
-
-        # Split the dataframe into dev and test sets
-        for d in decompose(df):
-            d["subset"] = difficulty  # 難易度情報は保持
-            all_data.append(d)
-
+    
     os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
-    save_json(args.output_path, all_data)
+    if os.path.exists(args.output_path):
+        print(f"{args.output_path} は存在しています。")
+    else:
+        print(f"{args.output_path} は存在していません。")
 
+        all_data = []
+        for file_path in file_paths:
+            if "Easy" in os.path.basename(file_path):
+                difficulty = "easy"
+            elif "Hard" in os.path.basename(file_path):
+                difficulty = "hard"
+            else:
+                raise ValueError("Unknown difficulty")
+
+            df = pd.read_csv(file_path)
+            df = df.head(25)
+            df = df.where(pd.notnull(df), None)
+
+            # Shuffle the dataframe
+            df = df.sample(frac=1, random_state=args.seed).reset_index(drop=True)
+
+            # Split the dataframe into dev and test sets
+            for d in decompose(df):
+                d["subset"] = difficulty  # 難易度情報は保持
+                all_data.append(d)
+
+        os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
+        save_json(args.output_path, all_data)
 
 if __name__ == "__main__":
     main()

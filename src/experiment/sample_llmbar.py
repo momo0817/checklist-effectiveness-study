@@ -1,7 +1,8 @@
 import argparse
 import os
 import random
-
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from utils.data import load_json, save_json
 
 
@@ -58,28 +59,31 @@ def load_args():
 def main():
     args = load_args()
 
-    assert (
-        args.dev_sampling_rate + args.test_sampling_rate <= 1
-    ), "Dev and test sampling rates should sum to 1"
+    # 親ディレクトリだけ作る
+    os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
+    if os.path.exists(args.output_path):
+        print(f"{args.output_path} は存在しています。")
+    else:
+        print(f"{args.output_path} は存在していません。")
 
-    all_samples = []
-    for subset in args.subsets:
-        dataset_path = os.path.join(args.llmbar_dir, subset, args.dataset_name)
-        dataset = load_json(dataset_path)
+        all_samples = []
+        for subset in args.subsets:
+            dataset_path = os.path.join(args.llmbar_dir, subset, args.dataset_name)
+            dataset = load_json(dataset_path)
 
-        print(f"Number of samples in {subset}: {len(dataset)}")
+            print(f"Number of samples in {subset}: {len(dataset)}")
 
-        for idx, d in enumerate(dataset):
-            d["subset"] = f"{subset}_{idx}"
+            for idx, d in enumerate(dataset):
+                d["subset"] = f"{subset}_{idx}"
 
-        random.seed(args.seed)
-        random.shuffle(dataset)
+            random.seed(args.seed)
+            random.shuffle(dataset)
 
-        all_samples.extend(dataset)
+            all_samples.extend(dataset)
 
-    print(f"Number of all samples: {len(all_samples)}")
-    os.makedirs(args.output_path, exist_ok=True)
-    save_json(args.output_path, all_samples)
+        print(f"Number of all samples: {len(all_samples)}")
+        save_json(args.output_path, all_samples)
+
 
 
 if __name__ == "__main__":
