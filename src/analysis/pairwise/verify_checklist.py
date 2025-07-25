@@ -1,14 +1,8 @@
 import os
 import sys
-import glob
-import json
 import argparse
-import numpy as np
-from pathlib import Path
-import pandas as pd
-from calc_pairwise_acc import load_ignore_questions
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../')))
-from src.utils.data import load_jsonl, load_json, save_json,make_output_dir
+from src.utils.data import load_jsonl, save_json,make_output_dir
 
 def load_args():
     args =  argparse.ArgumentParser()
@@ -23,7 +17,7 @@ def load_args():
         "--question_path",
         type = str,
         help = "Path to the question",
-        default = "./LLMBar/Dataset/Sample/Test/dataset.json"
+        default = "./LLMBar/Dataset/dataset.json"
     )
     args.add_argument(
         "--checklist_model",
@@ -41,60 +35,48 @@ def load_args():
         "--checklist_path",
         type = str,
         help = "Path to the question",
-        default = "./outputs/checklist/{policy}/Sample_Test/{checklist_model}.jsonl"
+        default = "./outputs/checklist/{policy}/LLMBar/{checklist_model}.jsonl"
     )
     args.add_argument(
         "--eval_path",
         type = str,
         help = "Path to the evaluation",
-        default = "./outputs/evaluation/checklist/{policy}:{checklist_model}/Sample_Test/{eval_model}.jsonl"
+        default = "./outputs/evaluation/checklist/{policy}:{checklist_model}/LLMBar/{eval_model}.jsonl"
     )
     args.add_argument(
         "--no_checklist_eval_path",
         type = str,
         help = "Path to the evaluation",
-        default = "./outputs/evaluation/baseline/Sample_Test/{eval_model}.jsonl"
-    )
-    args.add_argument(
-        "--preprocessed_checklist_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/preprocessed/pairwise/Sample_Test/checklist/{policy}/{checklist_model}.jsonl"
-    )
-    args.add_argument(
-        "--preprocessed_eval_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/preprocessed/pairwise/Sample_Test/evaluation/checklist/{policy}:{checklist_model}/{eval_model}.jsonl"
+        default = "./outputs/evaluation/no_checklist/LLMBar/{eval_model}.jsonl"
     )
     args.add_argument(
         "--preprocessed_no_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/preprocessed/pairwise/Sample_Test/evaluation/baseline/{policy}/{eval_model}.jsonl"
+        default = "./analysis/preprocessed/pairwise/LLMBar/evaluation/no_checklist/{policy}/{eval_model}.jsonl"
     )
+    args.add_argument(
+        "--preprocessed_checklist_path",
+        type = str,
+        help = "Path to the output",
+        default = "./analysis/preprocessed/pairwise/LLMBar/checklist/{policy}/{checklist_model}.jsonl"
+    )
+    args.add_argument(
+        "--preprocessed_eval_path",
+        type = str,
+        help = "Path to the output",
+        default = "./analysis/preprocessed/pairwise/LLMBar/evaluation/checklist/{policy}:{checklist_model}/{eval_model}.jsonl"
+    )
+
     args.add_argument(
         "--checklist_stats_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/stats/pairwise/Sample_Test/checklist/{checklist_model}/summary/{eval_model}.jsonl"
+        default = "./analysis/stats/pairwise/LLMBar/checklist/{checklist_model}/summary/{eval_model}.jsonl"
     )
     return args.parse_args()
 
-# def preprocess_checklist(checklist_data):
-    
-#     checklist_dict = {}
-#     for data in checklist_data:
-#         # question = data["question"]
-#         # checklist = data["checklist"]
-#         # checklist_dict[question] = checklist
-#         question_text = data.get("input", "")
-#         eval_item = {
-#                     "question": question_text,
-#                     "eval_responses": data.get(question_text, {})
-#                 }
-#         checklist_dict[question_text] = eval_item
-#     return checklist_dict
+
 def preprocess_checklist(checklist_data):
     
     checklist_dict = {}
@@ -144,7 +126,6 @@ def verified_checklist(no_checklist_eval_data,eval_data, checklist_dict):
                         if len(checklist_items) != len(response_1_keys):
                             valid = False
         if valid:
-            # verified_eval_dict[question] = eval_responses
             verified_eval_dict = {
                 "question": question,
                 "eval_responses": eval_responses,
@@ -229,7 +210,6 @@ def main():
     checklist_generation_policies = ["baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
                                     "ticking", "refine_baseline", "detail"]
     all_stats = {}
-    # eval_model_name = args.eval_model
     eval_model_name = args.eval_model.replace("/", "_")
     checklist_model_name = args.checklist_model.replace("/", "_")
     no_checklist_eval_path = args.no_checklist_eval_path.format(eval_model=eval_model_name)

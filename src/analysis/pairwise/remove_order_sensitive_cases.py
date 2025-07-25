@@ -2,12 +2,10 @@ import os
 import sys
 import argparse
 from tqdm import tqdm
-from pathlib import Path
 import logging
 import matplotlib.pyplot as plt
-from collections import Counter
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../src')))
-from utils.data import load_jsonl, load_json, save_json, make_output_dir
+from utils.data import load_json, save_json, make_output_dir
 
 logger = logging.getLogger(__name__)
 
@@ -36,13 +34,13 @@ def load_args():
         "--ablation_change_bad_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/pairwise/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/change_bad_checklist/{inconsistency_threshold}_result.json"
+        default = "./analysis/data/bad_checklists/pairwise/{policy}:{checklist_model}/{eval_model}/ablation/change_bad_checklist/{inconsistency_threshold}_result.json"
     )
     args.add_argument(
         "--ablation_stay_bad_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/pairwise/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/stay_bad_checklist/{inconsistency_threshold}_result.json"
+        default = "./analysis/data/bad_checklists/pairwise/{policy}:{checklist_model}/{eval_model}/ablation/stay_bad_checklist/{inconsistency_threshold}_result.json"
     )
     args.add_argument(
         "--debug-mode",
@@ -54,37 +52,37 @@ def load_args():
         "--final_change_bad_checklist_path",
         type = str,
         help = "Path to the output",
-        default =  "./analysis/data/bad_checklists/pairwise/{subset}/{policy}:{checklist_model}/{eval_model}/final/change_bad_checklist/{inconsistency_threshold}_result.json"
+        default =  "./analysis/data/bad_checklists/pairwise/{policy}:{checklist_model}/{eval_model}/final/change_bad_checklist/{inconsistency_threshold}_result.json"
     )
     args.add_argument(
         "--final_stay_bad_checklist_path",
         type = str,
         help = "Path to the output",
-        default =  "./analysis/data/bad_checklists/pairwise/{subset}/{policy}:{checklist_model}/{eval_model}/final/stay_bad_checklist/{inconsistency_threshold}_result.json"
+        default =  "./analysis/data/bad_checklists/pairwise/{policy}:{checklist_model}/{eval_model}/final/stay_bad_checklist/{inconsistency_threshold}_result.json"
     )
     args.add_argument(
         "--figure_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/figures/pairwise/Sample_Test/checklist/{checklist_model}/final/{subset}/{change_or_stay}_threshold_comparison.png"
+        default = "./analysis/data/figures/pairwise/LLMBar/checklist/{checklist_model}/final/{change_or_stay}_threshold_comparison.png"
     )
     args.add_argument(
         "--average_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/figures/pairwise/Sample_Test/checklist/{checklist_model}/final/{subset}/average_threshold_comparison.png"
+        default = "./analysis/data/figures/pairwise/LLMBar/checklist/{checklist_model}/final/average_threshold_comparison.png"
     )
     args.add_argument(
         "--checklist_evaluation_final_stats_path",
         type = str,
         help = "Path to the evaluation stats",
-        default = "./analysis/data/stats/pairwise/Sample_Test/checklist/{checklist_model}/evaluation/final_{eval_model}.json"
+        default = "./analysis/data/stats/pairwise/LLMBar/checklist/{checklist_model}/evaluation/final_{eval_model}.json"
     )
     args.add_argument(
         "--checklist_ablation_final_stats_path",
         type = str,
         help = "Path to the ablation stats",
-        default = "./analysis/data/stats/pairwise/Sample_Test/checklist/{checklist_model}/ablation/final_{eval_model}.json"
+        default = "./analysis/data/stats/pairwise/LLMBar/checklist/{checklist_model}/ablation/final_{eval_model}.json"
     )
     args.add_argument(
     "--change_or_stay",
@@ -116,7 +114,7 @@ def filter_stable_judgements(ablation_path, filtered_output_path):
     save_json(filtered_output_path, stable_items)
     return len(items), unstable_count, len(items) - unstable_count
 
-def plot_results(all_stats, policy_list, subset_list, thresholds, checklist_model, eval_model, change_or_stay):
+def plot_results(all_stats, policy_list, thresholds, checklist_model, eval_model, change_or_stay):
     args = load_args()
     
     for change_or_stay in ["change_bad_checklist", "stay_bad_checklist"]:
@@ -129,19 +127,17 @@ def plot_results(all_stats, policy_list, subset_list, thresholds, checklist_mode
         plot_count = 0
         
         for policy in policy_list:
-            for subset in subset_list:
                 
                 ratio_values = []
                 for threshold in thresholds:
                     t_str = str(threshold)
-                    if (t_str in all_stats[change_or_stay].get(policy, {}).get(subset, {}) and 
-                        "stable_ratio" in all_stats[change_or_stay][policy][subset][t_str]):
-                        ratio_values.append(all_stats[change_or_stay][policy][subset][t_str]["stable_ratio"])
+                    if ("stable_ratio" in all_stats[change_or_stay][policy][t_str]):
+                        ratio_values.append(all_stats[change_or_stay][policy][t_str]["stable_ratio"])
                     else:
                         ratio_values.append(0)
                 if all(v==0 for v in ratio_values):
                     continue
-                label = f"{policy}-{subset}"
+                label = f"{policy}"
                 plt.plot(
                     thresholds,
                     ratio_values,
@@ -159,7 +155,6 @@ def plot_results(all_stats, policy_list, subset_list, thresholds, checklist_mode
         # Y軸の範囲を0-1に設定
         plt.ylim(0, 1)
         figure_path = args.figure_path.format(
-            subset="All", 
             change_or_stay=change_or_stay, 
             checklist_model=checklist_model
         )
@@ -178,12 +173,11 @@ def plot_results(all_stats, policy_list, subset_list, thresholds, checklist_mode
             count = 0
             
             for policy in policy_list:
-                for subset in subset_list:
-                    if (t_str in all_stats[change_or_stay].get(policy, {}).get(subset, {}) and 
-                        "stable_ratio" in all_stats[change_or_stay][policy][subset][t_str]):
-                        total_ratio += all_stats[change_or_stay][policy][subset][t_str]["stable_ratio"]
-                        count += 1
-            
+                if (t_str in all_stats[change_or_stay].get(policy, {}) and 
+                    "stable_ratio" in all_stats[change_or_stay][policy][t_str]):
+                    total_ratio += all_stats[change_or_stay][policy][t_str]["stable_ratio"]
+                    count += 1
+
             avg_values.append(total_ratio / count if count > 0 else 0)
         
         plt.plot(
@@ -201,7 +195,6 @@ def plot_results(all_stats, policy_list, subset_list, thresholds, checklist_mode
     plt.legend(loc='best')
     plt.ylim(0, 1)
     average_path = args.average_path.format(
-        subset="All", 
         checklist_model=checklist_model
     )
     make_output_dir(average_path)
@@ -219,11 +212,6 @@ def main():
     checklist_generation_policies = [
         "baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
         "ticking", "refine_baseline", "detail"
-    ]
-    
-    subset_list = [
-        "MT-Bench", "LLMEval^2", "FairEval", "Natural",
-        "GPTInst", "GPTOut", "Manual", "Neighbor"
     ]
     if args.variation_type == "all":
         target_policies = checklist_generation_policies
@@ -247,79 +235,72 @@ def main():
         results["change_bad_checklist"][policy] = {}
         results["stay_bad_checklist"][policy] = {}
         
-        for subset in subset_list:
-            results["change_bad_checklist"][policy][subset] = {}
-            results["stay_bad_checklist"][policy][subset] = {}
+        results["change_bad_checklist"][policy] = {}
+        results["stay_bad_checklist"][policy] = {}
+
+        if "change_bad_checklist" not in all_stats:
+            all_stats["change_bad_checklist"] = {}
+        if policy not in all_stats["change_bad_checklist"]:
+            all_stats["change_bad_checklist"][policy] = {}
+
+        if "stay_bad_checklist" not in all_stats:
+            all_stats["stay_bad_checklist"] = {}
+        if policy not in all_stats["stay_bad_checklist"]:
+            all_stats["stay_bad_checklist"][policy] = {}
+
+        
+        for threshold in range(4,11):
+            print(f"\nProcessing: policy={policy}, threshold={threshold}")
+            ablation_change_path = args.ablation_change_bad_checklist_path.format(
+                policy=policy, 
+                checklist_model=checklist_model,
+                eval_model=eval_model,
+                inconsistency_threshold=threshold
+            )
             
-            if "change_bad_checklist" not in all_stats:
-                all_stats["change_bad_checklist"] = {}
-            if policy not in all_stats["change_bad_checklist"]:
-                all_stats["change_bad_checklist"][policy] = {}
-            if subset not in all_stats["change_bad_checklist"][policy]:
-                all_stats["change_bad_checklist"][policy][subset] = {}
+            ablation_stay_path = args.ablation_stay_bad_checklist_path.format(
+                policy=policy, 
+                checklist_model=checklist_model,
+                eval_model=eval_model,
+                inconsistency_threshold=threshold
+            )
 
-            if "stay_bad_checklist" not in all_stats:
-                all_stats["stay_bad_checklist"] = {}
-            if policy not in all_stats["stay_bad_checklist"]:
-                all_stats["stay_bad_checklist"][policy] = {}
-            if subset not in all_stats["stay_bad_checklist"][policy]:
-                all_stats["stay_bad_checklist"][policy][subset] = {}
-
+            final_change_bad_checklist_path = args.final_change_bad_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model, inconsistency_threshold=threshold)
+            final_stay_bad_checklist_path = args.final_stay_bad_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model, inconsistency_threshold=threshold)
+            make_output_dir(final_change_bad_checklist_path)
+            make_output_dir(final_stay_bad_checklist_path)
+            total_change, unstable_change, stable_change = filter_stable_judgements(
+                ablation_change_path, final_change_bad_checklist_path
+            )
+            total_stay, unstable_stay, stable_stay = filter_stable_judgements(
+                ablation_stay_path, final_stay_bad_checklist_path
+            )
+            results["change_bad_checklist"][policy][threshold] = {
+                "total": total_change,
+                "unstable": unstable_change,
+                "stable": stable_change,
+                "stable_ratio": stable_change / total_change if total_change > 0 else 0
+            }
             
-            for threshold in range(4,11):
-                print(f"\nProcessing: policy={policy}, subset={subset}, threshold={threshold}")
-                ablation_change_path = args.ablation_change_bad_checklist_path.format(
-                    subset=subset, 
-                    policy=policy, 
-                    checklist_model=checklist_model,
-                    eval_model=eval_model,
-                    inconsistency_threshold=threshold
-                )
-                
-                ablation_stay_path = args.ablation_stay_bad_checklist_path.format(
-                    subset=subset, 
-                    policy=policy, 
-                    checklist_model=checklist_model,
-                    eval_model=eval_model,
-                    inconsistency_threshold=threshold
-                )
-
-                final_change_bad_checklist_path = args.final_change_bad_checklist_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model, inconsistency_threshold=threshold)
-                final_stay_bad_checklist_path = args.final_stay_bad_checklist_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model, inconsistency_threshold=threshold)
-                make_output_dir(final_change_bad_checklist_path)
-                make_output_dir(final_stay_bad_checklist_path)
-                total_change, unstable_change, stable_change = filter_stable_judgements(
-                    ablation_change_path, final_change_bad_checklist_path
-                )
-                total_stay, unstable_stay, stable_stay = filter_stable_judgements(
-                    ablation_stay_path, final_stay_bad_checklist_path
-                )
-                results["change_bad_checklist"][policy][subset][threshold] = {
-                    "total": total_change,
-                    "unstable": unstable_change,
-                    "stable": stable_change,
-                    "stable_ratio": stable_change / total_change if total_change > 0 else 0
-                }
-                
-                results["stay_bad_checklist"][policy][subset][threshold] = {
-                    "total": total_stay,
-                    "unstable": unstable_stay,
-                    "stable": stable_stay,
-                    "stable_ratio": stable_stay / total_stay if total_stay > 0 else 0
-                }
-                all_stats["change_bad_checklist"][policy][subset][str(threshold)] = {
-                    "total": total_change,
-                    "unstable": unstable_change,
-                    "stable": stable_change,
-                    "stable_ratio": stable_change / total_change if total_change > 0 else 0
-                }
-                
-                all_stats["stay_bad_checklist"][policy][subset][str(threshold)] = {
-                    "total": total_stay,
-                    "unstable": unstable_stay,
-                    "stable": stable_stay,
-                    "stable_ratio": stable_stay / total_stay if total_stay > 0 else 0
-                }
+            results["stay_bad_checklist"][policy][threshold] = {
+                "total": total_stay,
+                "unstable": unstable_stay,
+                "stable": stable_stay,
+                "stable_ratio": stable_stay / total_stay if total_stay > 0 else 0
+            }
+            all_stats["change_bad_checklist"][policy][str(threshold)] = {
+                "total": total_change,
+                "unstable": unstable_change,
+                "stable": stable_change,
+                "stable_ratio": stable_change / total_change if total_change > 0 else 0
+            }
+            
+            all_stats["stay_bad_checklist"][policy][str(threshold)] = {
+                "total": total_stay,
+                "unstable": unstable_stay,
+                "stable": stable_stay,
+                "stable_ratio": stable_stay / total_stay if total_stay > 0 else 0
+            }
     
     checklist_evaluation_final_stats_path = args.checklist_evaluation_final_stats_path.format(
         checklist_model=checklist_model, 
@@ -340,7 +321,7 @@ def main():
     save_json(checklist_ablation_final_stats_path, all_stats)
     
     # グラフの作成
-    plot_results(all_stats, target_policies, subset_list, [i  for i in range(4, 11)], checklist_model, eval_model, change_or_stay)
+    plot_results(all_stats, target_policies,  [i  for i in range(4, 11)], checklist_model, eval_model, change_or_stay)
 
 if __name__ == "__main__":
     main()

@@ -1,15 +1,8 @@
 import os
 import sys
-import glob
-import json
-import subprocess
 import argparse
-import numpy as np
-from pathlib import Path
-import pandas as pd
-from calc_pairwise_acc import load_ignore_questions
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../')))
-from src.utils.data import load_json, load_json, save_json, make_output_dir
+from src.utils.data import load_json, save_json, make_output_dir
 
 def load_args():
     args = argparse.ArgumentParser()
@@ -24,7 +17,7 @@ def load_args():
         "--question_path",
         type = str,
         help = "Path to the question",
-        default = "./LLMBar/Dataset/Sample/Test/dataset.json"
+        default = "./Dataset/LLMBar/dataset.json"
     )
     args.add_argument(
         "--checklist_model",
@@ -42,19 +35,19 @@ def load_args():
         "--preprocessed_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/preprocessed/pairwise/Sample_Test/checklist/{policy}/{checklist_model}.jsonl"
+        default = "./analysis/preprocessed/pairwise/LLMBar/checklist/{policy}/{checklist_model}.jsonl"
     )
     args.add_argument(
         "--preprocessed_eval_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/preprocessed/pairwise/Sample_Test/evaluation/checklist/{policy}:{checklist_model}/{eval_model}.jsonl"
+        default = "./analysis/preprocessed/pairwise/LLMBar/evaluation/checklist/{policy}:{checklist_model}/{eval_model}.jsonl"
     )
     args.add_argument(
         "--preprocessed_no_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/preprocessed/pairwise/Sample_Test/evaluation/baseline/{policy}/{eval_model}.jsonl"
+        default = "./analysis/preprocessed/pairwise/LLMBar/evaluation/no_checklist/{policy}/{eval_model}.jsonl"
     )
     args.add_argument(
         "--subset_questions_path",
@@ -84,13 +77,12 @@ def load_args():
         "--checklist_subset_stats_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/stats/pairwise/Sample_Test/checklist/{checklist_model}/subset_classification/{eval_model}.jsonl"
+        default = "./analysis/data/stats/pairwise/LLMBar/checklist/{checklist_model}/subset_classification/{eval_model}.jsonl"
     )
     return args.parse_args()
 
 
 def classificate_subset(args,question_data, checklist_model_name):
-    # subset_questions_path = args.subset_questions_path.format(subset=subset)
     classified_question_data = {}
     
     for item in question_data:
@@ -192,7 +184,6 @@ def main():
         "MT-Bench", "LLMEval^2", "FairEval", "Natural",
         "GPTInst", "GPTOut", "Manual", "Neighbor"
     ]
-    # eval_model = args.eval_model
 
     question_data = load_json(args.question_path)
     classified_question_data = classificate_subset(args, question_data, checklist_model_name)

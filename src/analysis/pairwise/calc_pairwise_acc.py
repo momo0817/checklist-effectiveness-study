@@ -21,10 +21,16 @@ def load_args():
         default="./outputs",
     )
     args.add_argument(
-        "--output-path",
+        "--accuracy-output-path",
         type=str,
         help="Path to the output file",
-        default="analysis/data/pairwise_accuracy.xlsx",
+        default="./outputs/analysis/pairwise/accuracy/results.xlsx",
+    )
+    args.add_argument(
+        "--bootstrap-output-path",
+        type=str,
+        help="Path to the bootstrap output file",
+        default="./outputs/analysis/pairwise/bootstrap/results.csv",
     )
 
     return args.parse_args()
@@ -115,7 +121,7 @@ def filter_data(data, ignore_questions):
 
 
 def load_baseline_experiments(evaluation_dir, ignore_questions):
-    baseline_paths = evaluation_dir.glob("evaluation/baseline/**/*.jsonl")
+    baseline_paths = evaluation_dir.glob("evaluation/no_checklist/**/*.jsonl")
 
     experiments = {}
     for file_path in baseline_paths:
@@ -297,15 +303,15 @@ def main():
 
     dist_header.append("total")
 
-    os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
-
+    os.makedirs(os.path.dirname(args.accuracy_output_path), exist_ok=True)
+    os.makedirs(os.path.dirname(args.bootstrap_output_path), exist_ok=True)
     score_df = pd.DataFrame(table, columns=header)
     distribution_df = pd.DataFrame(dist_table, columns=dist_header)
     bootstrap_df = pd.DataFrame(bootstrap_summary)
-    bootstrap_df.to_csv("analysis/data/bootstrap_results.csv", index=False)
+    bootstrap_df.to_csv(args.bootstrap_output_path, index=False)
 
 
-    with pd.ExcelWriter(args.output_path) as writer:
+    with pd.ExcelWriter(args.bootstrap_output_path) as writer:
         score_df.to_excel(writer, sheet_name="score", index=False)
         distribution_df.to_excel(writer, sheet_name="distribution", index=False)
         bootstrap_df.to_excel(writer, sheet_name="bootstrap", index=False)  
