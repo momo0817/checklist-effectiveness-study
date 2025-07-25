@@ -184,7 +184,7 @@ def main():
 
     checklist_generation_policies = [
         "baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
-        "ticking", "refine_baseline", "detail"
+        "ticking", "refine_baseline", "specify"
     ]
     subset_list = ["easy", "hard"]
     # eval_model = args.eval_model

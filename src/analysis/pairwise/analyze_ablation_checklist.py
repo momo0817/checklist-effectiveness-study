@@ -181,7 +181,7 @@ def plot_histgram_statistics(ablation_improvement_scores,  policy, output_path, 
         policy_title_map = {
             "baseline": "Baseline",
             "ticking": "Ticking",
-            "detail": "Specify",
+            "specify": "Specify",
             "adjust_0.5_baseline": "Length*0.5",
             "adjust_1.5_baseline": "Length*1.5",
             "refine_baseline": "Self-refine"
@@ -250,7 +250,7 @@ def plot_histgram_statistics(ablation_improvement_scores,  policy, output_path, 
     policy_title_map = {
             "baseline": "Baseline",
             "ticking": "Ticking",
-            "detail": "Specify",
+            "specify": "Specify",
             "adjust_0.5_baseline": "Length*0.5",
             "adjust_1.5_baseline": "Length*1.5",
             "refine_baseline": "Self-refine"
@@ -338,7 +338,7 @@ def main():
     
     checklist_generation_policies = [
             "baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
-            "ticking", "refine_baseline", "detail"
+            "ticking", "refine_baseline", "specify"
         ]
     grand_total_pos = 0
     grand_filtered_pos = 0

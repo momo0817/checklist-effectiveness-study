@@ -53,25 +53,25 @@ def load_args():
         "--preprocessed_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/preprocessed/scoring/InFoBench/checklist/{policy}/{checklist_model}.jsonl"
+        default = "./analysis/preprocessed/scoring/InFoBench/checklist/{policy}/{checklist_model}.jsonl"
     )
     args.add_argument(
         "--preprocessed_eval_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/preprocessed/scoring/InFoBench/checklist/{policy}:{checklist_model}/{eval_model}.jsonl"
+        default = "./analysis/preprocessed/scoring/InFoBench/checklist/{policy}:{checklist_model}/{eval_model}.jsonl"
     )
     args.add_argument(
         "--preprocessed_no_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/preprocessed/scoring/InFoBench/no_checklist/{policy}/{eval_model}.jsonl"
+        default = "./analysis/preprocessed/scoring/InFoBench/no_checklist/{policy}/{eval_model}.jsonl"
     )
     args.add_argument(
         "--checklist_stats_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/stats/scoring/InFoBench/checklist_summary/{checklist_model}/{eval_model}.jsonl"
+        default = "./analysis/stats/scoring/InFoBench/{checklist_model}/summary/{eval_model}.jsonl"
     )
     return args.parse_args()
 
@@ -277,14 +277,14 @@ def process_policy(args, policy,no_checklist_eval_data):
 def main():
     args = load_args()
     checklist_generation_policies = ["baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
-                                    "ticking", "refine_baseline", "detail"]
+                                    "ticking", "refine_baseline", "specify"]
     all_stats = {}
     # eval_model_name = args.eval_model
     eval_model_name = args.eval_model.replace("/", "_")
     checklist_model_name = args.checklist_model.replace("/", "_")
     no_checklist_eval_path = args.no_checklist_eval_path.format(eval_model=eval_model_name)
     checklist_stats_path = args.checklist_stats_path.format(checklist_model=checklist_model_name, eval_model=eval_model_name)
-    checklist_generation_policies_path = "./analysis/data/info/checklist_generation_policies_scoring.json"
+    checklist_generation_policies_path = "./analysis/info/checklist_generation_policies_scoring.json"
     make_output_dir(checklist_generation_policies_path)
     save_json(checklist_generation_policies_path, checklist_generation_policies)
     

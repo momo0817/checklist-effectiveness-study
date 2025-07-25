@@ -208,7 +208,7 @@ def process_policy(args, policy,no_checklist_eval_data):
 def main():
     args = load_args()
     checklist_generation_policies = ["baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
-                                    "ticking", "refine_baseline", "detail"]
+                                    "ticking", "refine_baseline", "specify"]
     all_stats = {}
     eval_model_name = args.eval_model.replace("/", "_")
     checklist_model_name = args.checklist_model.replace("/", "_")

@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import argparse
 import numpy as np
 from decimal import Decimal, ROUND_HALF_UP
@@ -22,10 +21,16 @@ def load_args():
         default="./outputs",
     )
     args.add_argument(
-        "--output-path",
+        "--krippendorff-output-path",
         type=str,
         help="Path to the output file",
-        default="analysis/data/abs_krippendorff_alpha.xlsx",
+        default="./outputs/analysis/scoring/krippendorff_alpha.xlsx",
+    )
+    args.add_argument(
+        "--bootstrap-output-path",
+        type=str,
+        help="Path to the output file",
+        default="./outputs/analysis/bootstrap/scoring_results.csv",
     )
 
     return args.parse_args()
@@ -113,7 +118,7 @@ def filter_data(data, ignore_questions):
 
 
 def load_baseline_experiments(evaluation_dir, ignore_questions):
-    baseline_paths = evaluation_dir.glob("abs_evaluation/baseline/**/*.jsonl")
+    baseline_paths = evaluation_dir.glob("abs_evaluation/no_checklist/**/*.jsonl")
 
     experiments = {}
     for file_path in baseline_paths:
@@ -312,19 +317,19 @@ def main():
     dist_header.append("w/ checklist")
     dist_header.append("total")
 
-    os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
+    os.makedirs(os.path.dirname(args.krippendorff_krippendorff_output_path), exist_ok=True)
 
     # Convert tables to DataFrames
     score_df = pd.DataFrame(table, columns=header)
     distribution_df = pd.DataFrame(dist_table, columns=dist_header)
     bootstrap_df = pd.DataFrame(bootstrap_summary)
-    bootstrap_df.to_csv("analysis/data/bootstrap_result_scoring.csv", index=False)
+    bootstrap_df.to_csv(args.bootstrap_output_path, index=False)
 
     # Write DataFrames to Excel file with separate sheets
-    with pd.ExcelWriter(args.output_path) as writer:
+    with pd.ExcelWriter(args.krippendorff_krippendorff_output_path) as writer:
         score_df.to_excel(writer, sheet_name="score", index=False)
         distribution_df.to_excel(writer, sheet_name="distribution", index=False)
-        bootstrap_df.to_excel("analysis/data/abs_krippendorff_alpha_bootstrap.xlsx", index=False)
+        bootstrap_df.to_excel(args.bootstrap_output_path, index=False)
 
 
 if __name__ == "__main__":

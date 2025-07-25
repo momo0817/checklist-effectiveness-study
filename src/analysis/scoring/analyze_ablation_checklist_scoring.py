@@ -52,138 +52,67 @@ def load_args():
         "--ablation_positive_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/positive_checklist/ablation_result.json"
+        default = "./analysis/ablation/scoring/{policy}:{checklist_model}/{eval_model}/positive/ablation_result.json"
     )
     args.add_argument(
         "--ablation_negative_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/negative_checklist/ablation_result.json"
+        default = "./analysis/ablation/scoring/{policy}:{checklist_model}/{eval_model}/negative/ablation_result.json"
     )
     args.add_argument(
         "--miss_ablation_negative_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/positive_checklist/miss_result.json"
+        default = "./analysis/ablation/scoring/{policy}:{checklist_model}/{eval_model}/negative/miss_result.json"
     )
     args.add_argument(
         "--miss_ablation_positive_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/negative_checklist/miss_result.json"
+        default = "./analysis/ablation/scoring/{policy}:{checklist_model}/{eval_model}/positive/miss_result.json"
     )
     args.add_argument(
         "--ablation_final_positive_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/ablated_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/final/positive/ablation_result.json"
+        default = "./analysis/ablated_final/scoring/{policy}:{checklist_model}/{eval_model}/positive/ablation_result.json"
     )
     args.add_argument(
         "--ablation_final_negative_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/ablated_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/final/negative/ablation_result.json"
+        default = "./analysis/ablated_final/scoring/{policy}:{checklist_model}/{eval_model}/negative/ablation_result.json"
     )
     args.add_argument(
         "--ablation_filtered_positive_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/ablated_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/filtered/positive/{policy}_ablation_result.json"
+        default = "./analysis/ablated_filtered/scoring/{policy}:{checklist_model}/{eval_model}/positive/ablation_result.json"
     )
     args.add_argument(
         "--ablation_filtered_negative_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/ablated_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/filtered/negative/{policy}_ablation_result.json"
+        default = "./analysis/ablated_filtered/scoring/{policy}:{checklist_model}/{eval_model}/negative/ablation_result.json"
     )
-    
-    args.add_argument(
-        "--all_policies_filtered_positive_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/ablated_checklists/scoring/InFoBench/{checklist_model}/{eval_model}/filtered/all_policies_filtered_positive.json"
-    )
-    args.add_argument(
-        "--all_policies_filtered_negative_path",
-        type = str,
-        help = "Path to the output",
-        default =  "./analysis/data/ablated_checklists/scoring/InFoBench/{checklist_model}/{eval_model}/filtered/all_policies_filtered_negative_0.9.json"
-    )
-    args.add_argument(
-        "--all_policies_final_positive_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/ablated_checklists/scoring/InFoBench/{checklist_model}/{eval_model}/filtered/all_policies_final_positive.json"
-    )
-    args.add_argument(
-        "--all_policies_final_negative_path",
-        type = str,
-        help = "Path to the output",
-        default =  "./analysis/data/ablated_checklists/scoring/InFoBench/{checklist_model}/{eval_model}/filtered/all_policies_final_negative.json"
-    )
-    
-    args.add_argument(
-        "--checklist_ablation_stats_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/stats/scoring/InFoBench/checklist/{policy}:{checklist_model}/ablation/{eval_model}_ablation_stats.json"
-    )
-    
     args.add_argument(
         "--negative_histgram_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/final/scoring/InFoBench/{policy}:{checklist_model}/{eval_model}/histgrams/negative/{subset}/final_result.pdf"
+        default = "./analysis/stats/scoring/InFoBench/histgrams/negative/{policy}:{checklist_model}/{eval_model}/final_result.pdf"
     )
     args.add_argument(
         "--positive_histgram_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/final/scoring/InFoBench/{policy}:{checklist_model}/{eval_model}/histgrams/positive/{subset}/final_result.pdf"
-    )
-    args.add_argument(
-        "--combined_histgram_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/final/scoring/InFoBench/{policy}:{checklist_model}/{eval_model}/histgrams/{policy}_combined.pdf"
-    )
-    args.add_argument(
-        "--positive_combined_histgram_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/final/scoring/InFoBench/{policy}:{checklist_model}/{eval_model}/histgrams/positive/{policy}_combined.pdf"
-    )
-    args.add_argument(
-        "--negative_combined_histgram_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/final/scoring/InFoBench/{policy}:{checklist_model}/{eval_model}/histgrams/negative/{policy}_combined.pdf"
-    )
-    args.add_argument(
-        "--combined_stats_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/final/scoring/InFoBench//histgrams/{policy}:{checklist_model}/{eval_model}/combined_stats.json"
-    )
-    
-    
-    args.add_argument(
-        "--stats_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/final/scoring/InFoBench/{eval_model}/histograms/statistics/{subset}/{policy}/stats_result.json"
-    )
-    args.add_argument(
-        "--all_stats_path",
-        type = str,
-        help = "Path to the output",
-        default = "./analysis/data/final/scoring/InFoBench/generated_{checklist_model}/{eval_model}/histograms/statistics/all/stats_result.json"
+        default = "./analysis/stats/scoring/InFoBench/histgrams/positive/{policy}:{checklist_model}/{eval_model}/final_result.pdf"
     )
     
     return args.parse_args()
 
 
-def plot_histgram_statistics(ablation_improvement_scores, subset_name, policy, output_path, pos_or_neg, threshold=None, stats_path=None):
+def plot_histgram_statistics(ablation_improvement_scores, policy, output_path, pos_or_neg, threshold=None, stats_path=None):
     """改善スコアのヒストグラムを作成し統計情報を保存する関数"""
     # 統計情報を計算
     mean_score = np.mean(ablation_improvement_scores) if ablation_improvement_scores else 0
@@ -199,7 +128,7 @@ def plot_histgram_statistics(ablation_improvement_scores, subset_name, policy, o
     
     # 統計情報をJSON形式で保存
     statistics = {
-        "subset": subset_name,
+
         "policy": policy,
         "threshold": threshold,
         "total_samples": len(ablation_improvement_scores),
@@ -289,20 +218,17 @@ def plot_histgram_statistics(ablation_improvement_scores, subset_name, policy, o
     plt.ylabel('Frequency', fontsize=19, labelpad=5)  
     plt.tight_layout()
     plt.subplots_adjust(left=0.15)  # labelpadの値を大きくするほどラベルが軸から離れる
-    display_subset_name = "All" if subset_name == "all" else subset_name
     policy_title_map = {
             "baseline": "Baseline",
             "ticking": "Ticking",
-            "detail": "Specify",
+            "specify": "Specify",
             "adjust_0.5_baseline": "Length*0.5",
             "adjust_1.5_baseline": "Length*1.5",
             "refine_baseline": "Self-refine"
         }
 
-        # 表示用タイトルだけ変換
     display_policy = policy_title_map.get(policy, policy)
     display_pos_neg = "Negative" if pos_or_neg == "negative" else "Positive"
-    #plt.title(f'Distribution of {display_pos_neg} Item Contribution Score (via Ablation) - {display_policy} - {display_subset_name}',  fontsize=18)
     plt.legend(loc='upper left', fontsize=18)
     plt.tight_layout()
     
@@ -336,7 +262,6 @@ def safe_load_json(path):
 
 def classificate_ablation_improvement_scores(
     checklist: list,
-    subset_name: str,
     policy: str,
     score_type: str,  # "positive" or "negative"
     hist_path: str,
@@ -383,7 +308,7 @@ def classificate_ablation_improvement_scores(
             final_checklist.append(entry)
 
     # ヒストグラムと円グラフ出力
-    plot_histgram_statistics(scores, subset_name, policy, hist_path, score_type)
+    plot_histgram_statistics(scores, policy, hist_path, score_type)
 
     return scores, checklists, final_checklist, filtered_checklist
 
@@ -395,12 +320,8 @@ def main():
     
     checklist_generation_policies = [
             "baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
-            "ticking", "refine_baseline", "detail"
+            "ticking", "refine_baseline", "specify"
         ]
-    subset_list = [
-       "easy", "hard"
-    ]
-    
     grand_total_pos = 0
     grand_filtered_pos = 0
     grand_total_neg = 0
@@ -432,85 +353,79 @@ def main():
         policy_filtered_neg_count = 0
         policy_final_neg_count = 0
 
-        for subset in subset_list:
-            print(f"Processing subset: {subset}")
             
-            ablation_final_positive_checklist_path = args.ablation_final_positive_checklist_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            ablation_final_negative_checklist_path = args.ablation_final_negative_checklist_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            ablation_filtered_positive_checklist_path = args.ablation_filtered_positive_checklist_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            ablation_filtered_negative_checklist_path = args.ablation_filtered_negative_checklist_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            
-            ablation_positive_checklist_path = args.ablation_positive_checklist_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            ablation_negative_checklist_path = args.ablation_negative_checklist_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            
-            ablation_positive_checklist = safe_load_json(ablation_positive_checklist_path) 
-            ablation_negative_checklist = safe_load_json(ablation_negative_checklist_path) 
-            
-            miss_ablation_positive_path = args.miss_ablation_positive_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            miss_ablation_negative_path = args.miss_ablation_negative_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            
-            miss_ablation_positive_checklist = safe_load_json(miss_ablation_positive_path) 
-            miss_ablation_negative_checklist = safe_load_json(miss_ablation_negative_path) 
-            
-            pos_checklist = ablation_positive_checklist + miss_ablation_positive_checklist 
-            neg_checklist = ablation_negative_checklist + miss_ablation_negative_checklist
+        ablation_final_positive_checklist_path = args.ablation_final_positive_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        ablation_final_negative_checklist_path = args.ablation_final_negative_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        ablation_filtered_positive_checklist_path = args.ablation_filtered_positive_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        ablation_filtered_negative_checklist_path = args.ablation_filtered_negative_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        
+        ablation_positive_checklist_path = args.ablation_positive_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        ablation_negative_checklist_path = args.ablation_negative_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        
+        ablation_positive_checklist = safe_load_json(ablation_positive_checklist_path) 
+        ablation_negative_checklist = safe_load_json(ablation_negative_checklist_path) 
+        
+        miss_ablation_positive_path = args.miss_ablation_positive_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        miss_ablation_negative_path = args.miss_ablation_negative_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        
+        miss_ablation_positive_checklist = safe_load_json(miss_ablation_positive_path) 
+        miss_ablation_negative_checklist = safe_load_json(miss_ablation_negative_path) 
+        
+        pos_checklist = ablation_positive_checklist + miss_ablation_positive_checklist 
+        neg_checklist = ablation_negative_checklist + miss_ablation_negative_checklist
 
-            pos_hist_path = args.positive_histgram_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-            neg_hist_path = args.negative_histgram_path.format(subset=subset, policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        pos_hist_path = args.positive_histgram_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        neg_hist_path = args.negative_histgram_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
 
-            make_output_dir(ablation_final_positive_checklist_path)
-            make_output_dir(ablation_final_negative_checklist_path)
-            make_output_dir(ablation_filtered_positive_checklist_path)
-            make_output_dir(ablation_filtered_negative_checklist_path)
-            make_output_dir(pos_hist_path)
-            make_output_dir(neg_hist_path)
+        make_output_dir(ablation_final_positive_checklist_path)
+        make_output_dir(ablation_final_negative_checklist_path)
+        make_output_dir(ablation_filtered_positive_checklist_path)
+        make_output_dir(ablation_filtered_negative_checklist_path)
+        make_output_dir(pos_hist_path)
+        make_output_dir(neg_hist_path)
+        
+        pos_scores, pos_checklists, final_pos_checklist, filtered_pos_checklist = classificate_ablation_improvement_scores(
+            pos_checklist, policy, "positive", pos_hist_path
+        )
+        neg_scores, neg_checklists, final_neg_checklist, filtered_neg_checklist = classificate_ablation_improvement_scores(
+            neg_checklist, policy, "negative", neg_hist_path
+        )
+        
+        # 各サブセットのカウント
+        policy_filtered_pos_count += len(filtered_pos_checklist)
+        policy_final_pos_count += len(final_pos_checklist)
+        policy_filtered_neg_count += len(filtered_neg_checklist)
+        policy_final_neg_count += len(final_neg_checklist)
+
+        for item in filtered_pos_checklist:
+            item_with_metadata = item.copy() if isinstance(item, dict) else {'original_item': item}
+            item_with_metadata['policy'] = policy
+
+            all_policies_filtered_pos_checklist.append(item_with_metadata)
             
-            pos_scores, pos_checklists, final_pos_checklist, filtered_pos_checklist = classificate_ablation_improvement_scores(
-                pos_checklist, subset, policy, "positive", pos_hist_path
-            )
-            neg_scores, neg_checklists, final_neg_checklist, filtered_neg_checklist = classificate_ablation_improvement_scores(
-                neg_checklist, subset, policy, "negative", neg_hist_path
-            )
+        for item in filtered_neg_checklist:
+            item_with_metadata = item.copy() if isinstance(item, dict) else {'original_item': item}
+            item_with_metadata['policy'] = policy
+            all_policies_filtered_neg_checklist.append(item_with_metadata)
             
-            # 各サブセットのカウント
-            policy_filtered_pos_count += len(filtered_pos_checklist)
-            policy_final_pos_count += len(final_pos_checklist)
-            policy_filtered_neg_count += len(filtered_neg_checklist)
-            policy_final_neg_count += len(final_neg_checklist)
+        for item in final_pos_checklist:
+            item_with_metadata = item.copy() if isinstance(item, dict) else {'original_item': item}
+            item_with_metadata['policy'] = policy
+            all_policies_final_pos_checklist.append(item_with_metadata)
+            
+        for item in final_neg_checklist:
+            item_with_metadata = item.copy() if isinstance(item, dict) else {'original_item': item}
+            item_with_metadata['policy'] = policy
+            all_policies_final_neg_checklist.append(item_with_metadata)
 
-            # Add policy and subset information to each checklist item
-            for item in filtered_pos_checklist:
-                item_with_metadata = item.copy() if isinstance(item, dict) else {'original_item': item}
-                item_with_metadata['policy'] = policy
-                item_with_metadata['subset'] = subset
-                all_policies_filtered_pos_checklist.append(item_with_metadata)
-                
-            for item in filtered_neg_checklist:
-                item_with_metadata = item.copy() if isinstance(item, dict) else {'original_item': item}
-                item_with_metadata['policy'] = policy
-                item_with_metadata['subset'] = subset
-                all_policies_filtered_neg_checklist.append(item_with_metadata)
-                
-            for item in final_pos_checklist:
-                item_with_metadata = item.copy() if isinstance(item, dict) else {'original_item': item}
-                item_with_metadata['policy'] = policy
-                item_with_metadata['subset'] = subset
-                all_policies_final_pos_checklist.append(item_with_metadata)
-                
-            for item in final_neg_checklist:
-                item_with_metadata = item.copy() if isinstance(item, dict) else {'original_item': item}
-                item_with_metadata['policy'] = policy
-                item_with_metadata['subset'] = subset
-                all_policies_final_neg_checklist.append(item_with_metadata)
+        save_json(ablation_final_positive_checklist_path, final_pos_checklist)
+        save_json(ablation_final_negative_checklist_path, final_neg_checklist)
+        save_json(ablation_filtered_positive_checklist_path, filtered_pos_checklist)
+        save_json(ablation_filtered_negative_checklist_path, filtered_neg_checklist)
 
-            save_json(ablation_final_positive_checklist_path, final_pos_checklist)
-            save_json(ablation_final_negative_checklist_path, final_neg_checklist)
-            save_json(ablation_filtered_positive_checklist_path, filtered_pos_checklist)
-            save_json(ablation_filtered_negative_checklist_path, filtered_neg_checklist)
-
-            # 全体集計用に追加
-            all_positive_scores.extend(pos_scores)
-            all_negative_scores.extend(neg_scores)
+        # 全体集計用に追加
+        all_positive_scores.extend(pos_scores)
+        all_negative_scores.extend(neg_scores)
 
         # ポリシーごとの全体数を更新
         grand_total_pos += len(all_positive_scores)
@@ -531,22 +446,6 @@ def main():
         plot_histgram_statistics(all_positive_scores, "all", policy, pos_hist_path_all, "positive")
         plot_histgram_statistics(all_negative_scores, "all", policy, neg_hist_path_all, "negative")
 
-
-    # 全ポリシーのフィルタリングされたチェックリストと最終チェックリストを保存
-    all_policies_filtered_positive_path = args.all_policies_filtered_positive_path.format(checklist_model=checklist_model, eval_model=eval_model)
-    all_policies_filtered_negative_path = args.all_policies_filtered_negative_path.format(checklist_model=checklist_model, eval_model=eval_model)
-    all_policies_final_positive_path = args.all_policies_final_positive_path.format(checklist_model=checklist_model, eval_model=eval_model)
-    all_policies_final_negative_path = args.all_policies_final_negative_path.format(checklist_model=checklist_model, eval_model=eval_model)
-    
-    make_output_dir(all_policies_filtered_positive_path)
-    make_output_dir(all_policies_filtered_negative_path)
-    make_output_dir(all_policies_final_positive_path)
-    make_output_dir(all_policies_final_negative_path)
-    
-    save_json(all_policies_filtered_positive_path, all_policies_filtered_pos_checklist)
-    save_json(all_policies_filtered_negative_path, all_policies_filtered_neg_checklist)
-    save_json(all_policies_final_positive_path, all_policies_final_pos_checklist)
-    save_json(all_policies_final_negative_path, all_policies_final_neg_checklist)
 
     print("===== Overall Summary (All Policies) =====")
     if grand_total_pos > 0:

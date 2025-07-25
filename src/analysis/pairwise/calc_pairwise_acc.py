@@ -30,7 +30,7 @@ def load_args():
         "--bootstrap-output-path",
         type=str,
         help="Path to the bootstrap output file",
-        default="./outputs/analysis/pairwise/bootstrap/results.csv",
+        default="./outputs/analysis/bootstrap/pairwise_results.csv",
     )
 
     return args.parse_args()

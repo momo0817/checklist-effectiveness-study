@@ -211,7 +211,7 @@ def main():
     eval_model = args.eval_model_name_or_path.replace("/", "_")
     checklist_generation_policies = [
         "baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
-        "ticking", "refine_baseline", "detail"
+        "ticking", "refine_baseline", "specify"
     ]
     if args.variation_type == "all":
         target_policies = checklist_generation_policies

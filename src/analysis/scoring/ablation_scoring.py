@@ -10,12 +10,10 @@ from tqdm import tqdm
 import numpy as np
 import multiprocessing as mp
 from pathlib import Path
-from check_evaluation_scoring import calculate_average_label
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../src')))
 from utils.data import  load_json, save_json, load_prompt, make_output_dir
 from utils.model import load_model
 from abs_evaluate_response import  request
-from calc_abs_krippendorff_alpha import calc_ave_score, calc_krip_alpha
 
 
 logging.basicConfig(
@@ -34,7 +32,8 @@ def load_args():
         "--question_path",
         type = str,
         help = "Path to the question",
-         default = "./analysis/data/classification/scoring/{subset}/generated_{checklist_model}/preprocessed_questions.json"
+        #  default = "./analysis/data/classification/scoring/{subset}/generated_{checklist_model}/preprocessed_questions.json"
+        default="./Dataset/InFoBench/dataset.json"
     )
     
     args.add_argument(
@@ -101,45 +100,43 @@ def load_args():
     )
     args.add_argument(
         "--positive_checklist_path",
-        type = str,
-        help = "Path to the output file",
-        default = "./analysis/data/classification/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/checklist/positive_checklist.json"
+        type=str,
+        default = "./analysis/classification/scoring/{policy}:{checklist_model}/{eval_model}/checklist/positive_checklist.json"
     )
     args.add_argument(
         "--negative_checklist_path",
-        type = str,
-        help = "Path to the output file",
-        default = "./analysis/data/classification/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/checklist/negative_checklist.json"
+        type=str,
+        default = "./analysis/classification/scoring/{policy}:{checklist_model}/{eval_model}/checklist/negative_checklist.json"
     )
     args.add_argument(
         "--ablation_positive_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/positive_checklist/ablation_result.json"
+        default = "./analysis/ablation/scoring/{policy}:{checklist_model}/{eval_model}/positive/ablation_result.json"
     )
     args.add_argument(
         "--ablation_negative_checklist_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/negative_checklist/ablation_result.json"
+        default = "./analysis/ablation/scoring/{policy}:{checklist_model}/{eval_model}/negative/ablation_result.json"
     )
     args.add_argument(
         "--miss_ablation_negative_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/positive_checklist/miss_result.json"
+        default = "./analysis/ablation/scoring/{policy}:{checklist_model}/{eval_model}/negative/miss_result.json"
     )
     args.add_argument(
         "--miss_ablation_positive_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/bad_checklists/scoring/{subset}/{policy}:{checklist_model}/{eval_model}/ablation/negative_checklist/miss_result.json"
+        default = "./analysis/ablation/scoring/{policy}:{checklist_model}/{eval_model}/positive/miss_result.json"
     )
     args.add_argument(
         "--checklist_ablation_stats_path",
         type = str,
         help = "Path to the output",
-        default = "./analysis/data/stats/scoring/InFoBench/ablation/{checklist_model}/{eval_model}_{policy}.json"
+        default = "./analysis/stats/scoring/InFoBench/checklist/{checklist_model}/ablation/{eval_model}_{policy}.json"
     )
     return args.parse_args()
 
@@ -266,7 +263,7 @@ def run_scoring_ablation(args, base_prompt, dataset, checklist_model, eval_model
     
     return matched_ablation_results
 
-def scoring_evaluation(checklist_model, eval_model, policy, subset_list):
+def scoring_evaluation(checklist_model, eval_model, policy):
     args = load_args()
     logger.info(f'Loading model from {args.eval_model}')
     model = load_model(args.eval_model)
@@ -275,114 +272,102 @@ def scoring_evaluation(checklist_model, eval_model, policy, subset_list):
     base_prompt = load_prompt(args.base_prompt_path)
     stats = {}
      
-    for subset_name in subset_list:
-        logger.info(f'Loading dataset from: {args.question_path}')
-        dataset = load_json(args.question_path.format(subset=subset_name, checklist_model=checklist_model))
-        stats[subset_name] = {}
-        
-        positive_checklist_path = args.positive_checklist_path.format(
-            subset=subset_name, 
-            policy=policy, 
-            checklist_model=checklist_model, 
-            eval_model=eval_model
-        )
-        negative_checklist_path = args.negative_checklist_path.format(
-            subset=subset_name, 
-            policy=policy, 
-            checklist_model=checklist_model, 
-            eval_model=eval_model
-        )
-        ablation_positive_checklist_path = args.ablation_positive_checklist_path.format(
-            subset=subset_name, 
-            policy=policy, 
-            checklist_model=checklist_model, 
-            eval_model=eval_model
-        )
-        ablation_negative_checklist_path = args.ablation_negative_checklist_path.format(
-            subset=subset_name, 
-            policy=policy, 
-            checklist_model=checklist_model, 
-            eval_model=eval_model
-        ) 
-        miss_ablation_negative_path = args.miss_ablation_negative_path.format(
-            subset=subset_name, 
-            policy=policy, 
-            checklist_model=checklist_model, 
-            eval_model=eval_model
-        )   
-        miss_ablation_positive_path = args.miss_ablation_positive_path.format(
-            subset=subset_name, 
-            policy=policy, 
-            checklist_model=checklist_model, 
-            eval_model=eval_model
-        )
-        make_output_dir(positive_checklist_path)
-        make_output_dir(negative_checklist_path)
-        make_output_dir(ablation_positive_checklist_path)
-        make_output_dir(ablation_negative_checklist_path)
-        make_output_dir(miss_ablation_positive_path)
-        make_output_dir(miss_ablation_negative_path)
-        
-        if "{checklist}" in base_prompt:
-            positive_results = None
-            negative_results = None
-            if os.path.exists(positive_checklist_path):
-                logger.info(f'Loading positive checklist from: {positive_checklist_path}')
-                positive_checklist = load_json(positive_checklist_path)
-                logger.info(f'Found {len(positive_checklist)} positive checklists')
-                logger.info('Running ablation for positive checklists')
-                positive_results = run_scoring_ablation(
-                    args, 
-                    base_prompt, 
-                    dataset, 
-                    checklist_model, 
-                    model, 
-                    positive_checklist, 
-                    ablation_positive_checklist_path, 
-                    miss_ablation_positive_path,
-                    threshold=1.5, 
-                    is_positive=True
-                )
-                logger.info(f'Completed positive checklist ablation with {len(positive_results)} results')
-            else:
-                logger.warning(f'Positive checklist file not found: {positive_checklist_path}')
-                positive_results = []
-            
-            if os.path.exists(negative_checklist_path):
-                logger.info(f'Loading negative checklist from: {negative_checklist_path}')
-                negative_checklist = load_json(negative_checklist_path)
-                logger.info(f'Found {len(negative_checklist)} negative checklists')
-                
-                # Negative checklistに対するablation実行
-                logger.info('Running ablation for negative checklists')
-                negative_results = run_scoring_ablation(
-                    args, 
-                    base_prompt, 
-                    dataset, 
-                    checklist_model, 
-                    model, 
-                    negative_checklist, 
-                    ablation_negative_checklist_path, 
-                    miss_ablation_negative_path,
-                    threshold=1.5, 
-                    is_positive=False
-                )
-                logger.info(f'Completed negative checklist ablation with {len(negative_results)} results')
-            else:
-                logger.warning(f'Negative checklist file not found: {negative_checklist_path}')
-                negative_results = []
-            
-            # 両方の結果を統計に格納
-            stats[subset_name] = {
-                "positive_total": len(positive_checklist) if 'positive_checklist' in locals() and positive_checklist else 0,
-                "positive_ablation_success": len(positive_results) if positive_results else 0,
-                "negative_total": len(negative_checklist) if 'negative_checklist' in locals() and negative_checklist else 0,
-                "negative_ablation_success": len(negative_results) if negative_results else 0
-            }
-            
-            # 詳細なログを出力
-            logger.info(f"Stats for {subset_name}: {stats[subset_name]}")
     
+        
+    positive_checklist_path = args.positive_checklist_path.format(
+        policy=policy, 
+        checklist_model=checklist_model, 
+        eval_model=eval_model
+    )
+    negative_checklist_path = args.negative_checklist_path.format(
+        policy=policy, 
+        checklist_model=checklist_model, 
+        eval_model=eval_model
+    )
+    ablation_positive_checklist_path = args.ablation_positive_checklist_path.format(
+        policy=policy, 
+        checklist_model=checklist_model, 
+        eval_model=eval_model
+    )
+    ablation_negative_checklist_path = args.ablation_negative_checklist_path.format(
+        policy=policy, 
+        checklist_model=checklist_model, 
+        eval_model=eval_model
+    ) 
+    miss_ablation_negative_path = args.miss_ablation_negative_path.format(
+        policy=policy, 
+        checklist_model=checklist_model, 
+        eval_model=eval_model
+    )   
+    miss_ablation_positive_path = args.miss_ablation_positive_path.format(
+        policy=policy, 
+        checklist_model=checklist_model, 
+        eval_model=eval_model
+    )
+    make_output_dir(positive_checklist_path)
+    make_output_dir(negative_checklist_path)
+    make_output_dir(ablation_positive_checklist_path)
+    make_output_dir(ablation_negative_checklist_path)
+    make_output_dir(miss_ablation_positive_path)
+    make_output_dir(miss_ablation_negative_path)
+        
+    if "{checklist}" in base_prompt:
+        positive_results = None
+        negative_results = None
+        if os.path.exists(positive_checklist_path):
+            logger.info(f'Loading positive checklist from: {positive_checklist_path}')
+            positive_checklist = load_json(positive_checklist_path)
+            logger.info(f'Found {len(positive_checklist)} positive checklists')
+            logger.info('Running ablation for positive checklists')
+            positive_results = run_scoring_ablation(
+                args, 
+                base_prompt, 
+                args.dataset, 
+                checklist_model, 
+                model, 
+                positive_checklist, 
+                ablation_positive_checklist_path, 
+                miss_ablation_positive_path,
+                threshold=1.5, 
+                is_positive=True
+            )
+            logger.info(f'Completed positive checklist ablation with {len(positive_results)} results')
+        else:
+            logger.warning(f'Positive checklist file not found: {positive_checklist_path}')
+            positive_results = []
+        
+        if os.path.exists(negative_checklist_path):
+            logger.info(f'Loading negative checklist from: {negative_checklist_path}')
+            negative_checklist = load_json(negative_checklist_path)
+            logger.info(f'Found {len(negative_checklist)} negative checklists')
+            
+            # Negative checklistに対するablation実行
+            logger.info('Running ablation for negative checklists')
+            negative_results = run_scoring_ablation(
+                args, 
+                base_prompt, 
+                args.dataset, 
+                checklist_model, 
+                model, 
+                negative_checklist, 
+                ablation_negative_checklist_path, 
+                miss_ablation_negative_path,
+                threshold=1.5, 
+                is_positive=False
+            )
+            logger.info(f'Completed negative checklist ablation with {len(negative_results)} results')
+        else:
+            logger.warning(f'Negative checklist file not found: {negative_checklist_path}')
+            negative_results = []
+        
+        # 両方の結果を統計に格納
+        stats = {
+            "positive_total": len(positive_checklist) if 'positive_checklist' in locals() and positive_checklist else 0,
+            "positive_ablation_success": len(positive_results) if positive_results else 0,
+            "negative_total": len(negative_checklist) if 'negative_checklist' in locals() and negative_checklist else 0,
+            "negative_ablation_success": len(negative_results) if negative_results else 0
+        }
+        
     return stats
         
 def main():
@@ -396,10 +381,8 @@ def main():
         "adjust_1.5_baseline", 
         "ticking", 
         "refine_baseline", 
-        "detail"
+        "specify"
     ]
-
-    subset_list = ["easy", "hard"]
     
     if args.variation_type == "all":
         target_policies = checklist_generation_policies
@@ -418,7 +401,7 @@ def main():
         eval_model=eval_model,
         policy=policy
     )
-        stats = scoring_evaluation(checklist_model, eval_model, policy, subset_list)
+        stats = scoring_evaluation(checklist_model, eval_model, policy)
         all_stats[policy] = stats
 
     make_output_dir(checklist_ablation_stats_path)
