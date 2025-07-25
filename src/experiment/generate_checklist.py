@@ -16,13 +16,13 @@ def load_args():
         "--dataset-path",
         type=str,
         help="Path to the dataset",
-        default="./LLMBar/Dataset/Sample/dataset.json",
+        default="./LLMBar/Dataset/dataset.json",
     )
     parser.add_argument(
         "--output-path",
         type=str,
         help="Path to the output file",
-        default="./outputs/checklist/baseline/gpt-4o.jsonl",
+        default="./outputs/checklist/baseline/LLMBar/gpt-4o.jsonl",
     )
 
     parser.add_argument(

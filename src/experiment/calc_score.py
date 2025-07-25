@@ -12,7 +12,7 @@ def load_args():
         "--pairwise-judge-path",
         type=str,
         help="Path to the dataset",
-        default="./outputs/evaluation/baseline/Sample/gpt-4o-08-06.jsonl",
+        default="./outputs/evaluation/no_checklist/LLMBar/gpt-4o-08-06.jsonl",
     )
 
     return parser.parse_args()

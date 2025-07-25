@@ -18,7 +18,7 @@ def load_args():
         "--dataset-path",
         type=str,
         help="Path to the dataset",
-        default="./LLMBar/Dataset/Sample/dataset.json",
+        default="./LLMBar/Dataset/dataset.json",
     )
     parser.add_argument(
         "--checklist-path",
