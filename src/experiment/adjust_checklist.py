@@ -1,7 +1,8 @@
 import os
 import re
 import argparse
-
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from utils.data import load_prompt, load_quesions, load_jsonl, save_jsonl
 from utils.model import load_model
 
@@ -16,13 +17,13 @@ def load_args():
         "--dataset-path",
         type=str,
         help="Path to the dataset",
-        default="./LLMBar/Dataset/Sample/dataset.json",
+        default="./LLMBar/Dataset/dataset.json",
     )
     parser.add_argument(
         "--base-checklist-path",
         type=str,
         help="Path to the base checklist file",
-        default="./outputs/LLMBar/Sample/checklist/gpt-4o-2024-08-06.jsonl",
+        default="./outputs/checklist/adjust_0.5_baseline/LLMBar/gpt-4o.jsonl",
     )
 
     parser.add_argument(

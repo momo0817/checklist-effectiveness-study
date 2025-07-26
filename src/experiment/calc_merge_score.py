@@ -1,7 +1,9 @@
 import argparse
 
 from collections import Counter
-
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from utils.data import load_jsonl
 from calc_score import make_final_judge
 

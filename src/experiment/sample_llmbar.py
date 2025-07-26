@@ -62,27 +62,27 @@ def main():
     # 親ディレクトリだけ作る
     os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
     if os.path.exists(args.output_path):
-        print(f"{args.output_path} は存在しています。")
+        print(f"{args.output_path} is exists.")
     else:
-        print(f"{args.output_path} は存在していません。")
+        print(f"{args.output_path} is not exists.")
 
-        all_samples = []
-        for subset in args.subsets:
-            dataset_path = os.path.join(args.llmbar_dir, subset, args.dataset_name)
-            dataset = load_json(dataset_path)
+    all_samples = []
+    for subset in args.subsets:
+        dataset_path = os.path.join(args.llmbar_dir, subset, args.dataset_name)
+        dataset = load_json(dataset_path)
 
-            print(f"Number of samples in {subset}: {len(dataset)}")
+        print(f"Number of samples in {subset}: {len(dataset)}")
 
-            for idx, d in enumerate(dataset):
-                d["subset"] = f"{subset}_{idx}"
+        for idx, d in enumerate(dataset):
+            d["subset"] = f"{subset}_{idx}"
 
-            random.seed(args.seed)
-            random.shuffle(dataset)
+        random.seed(args.seed)
+        random.shuffle(dataset)
 
-            all_samples.extend(dataset)
+        all_samples.extend(dataset)
 
-        print(f"Number of all samples: {len(all_samples)}")
-        save_json(args.output_path, all_samples)
+    print(f"Number of all samples: {len(all_samples)}")
+    save_json(args.output_path, all_samples)
 
 
 

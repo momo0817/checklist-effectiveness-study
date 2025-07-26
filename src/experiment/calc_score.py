@@ -1,5 +1,7 @@
 import argparse
-
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from collections import Counter
 
 from utils.data import load_jsonl

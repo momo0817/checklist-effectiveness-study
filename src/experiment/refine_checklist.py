@@ -1,7 +1,8 @@
 import os
 import re
 import argparse
-
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from utils.data import load_prompt, load_quesions, load_jsonl, save_jsonl
 from utils.model import load_model
 
@@ -22,14 +23,14 @@ def load_args():
         "--base-checklist-path",
         type=str,
         help="Path to the base checklist file",
-        default="./outputs/LLMBar/Sample/gpt-4o.jsonl",
+        default="./outputs/checklist/refine_baseline/LLMBar/gpt-4o.jsonl",
     )
-
     parser.add_argument(
         "--output-path",
         type=str,
         help="Path to the output file",
         default="./outputs/evaluation/checklist/refine_baseline:gpt-4o-2024-08-06.jsonl",
+        
     )
 
     parser.add_argument(

@@ -1,7 +1,8 @@
 import os
 import re
 import argparse
-
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from utils.data import load_prompt, load_quesions, load_jsonl, save_jsonl
 from utils.model import load_model
 

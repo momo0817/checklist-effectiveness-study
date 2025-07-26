@@ -1,11 +1,12 @@
-import os
 import re
 import json
 import math
 import argparse
 
 from tqdm import tqdm
-
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from utils.data import load_prompt, load_jsonl, load_json, save_jsonl
 from utils.model import load_model
 
