@@ -34,7 +34,7 @@ python3 src/analysis/scoring/calc_krippendoff_alpha.py \
     --bootstrap-output-path ${BOOTSTRAP_OUTPUT_PATH}
 
 
-CHECKLIST_STATS_PATH="./analysis/stats/scoring/InFoBench/checklist/${CHECKLIST_MODEL_NAME}/summary/${EVAL_MODEL_NAME}.jsonl"
+CHECKLIST_STATS_PATH="./analysis/stats/scoring/InFoBench/checklist/${SIMPLE_CHECKLIST_MODEL_NAME}/summary/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 PREPROCESSED_EVAL_PATH="./analysis/preprocessed/scoring/InFoBench/evaluation/checklist/${CHECKLIST_TYPE}/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 PREPROCESSED_NO_EVAL_PATH="./analysis/preprocessed/scoring/InFoBench/evaluation/no_checklist/${CHECKLIST_TYPE}/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 PREPROCESSED_CHECKLIST_PATH="./analysis/preprocessed/scoring/InFoBench/checklist/${CHECKLIST_TYPE}/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
@@ -48,7 +48,7 @@ python3 src/analysis/scoring/verify_checklist_scoring.py \
     --checklist_path ${CHECKLIST_PATH} \
     --eval_path ${CHECKLIST_EVAL_OUTPUT_PATH} \
     --no_checklist_eval_path ${BASELINE_EVAL_OUTPUT_PATH} \
-    --preprocessed_no_checklist_eval_path ${PREPROCESSED_NO_EVAL_PATH} \
+    --preprocessed_no_checklist_path ${PREPROCESSED_NO_EVAL_PATH} \
     --preprocessed_checklist_path ${PREPROCESSED_CHECKLIST_PATH} \
     --preprocessed_eval_path ${PREPROCESSED_EVAL_PATH} \
     --checklist_stats_path ${CHECKLIST_STATS_PATH}
@@ -56,13 +56,13 @@ python3 src/analysis/scoring/verify_checklist_scoring.py \
 # python3 src/analysis/scoring/classificate_subset_scoring.py \
 
 echo "Running ablation study..."
-POSITIVE_CHECKLIST_PATH=./analysis/classification/scoring/${CHECKLIST_TYPE}:${CHECKLIST_MODEL_NAME}/${EVAL_MODEL_NAME}/checklist/positive_checklist.json
-NEGATIVE_CHECKLIST_PATH=./analysis/classification/scoring/${CHECKLIST_TYPE}:${CHECKLIST_MODEL_NAME}/${EVAL_MODEL_NAME}/checklist/negative_checklist.json
-ABLATION_POSITIVE_CHECKLIST_PATH=./analysis/ablation/scoring/${CHECKLIST_TYPE}:${CHECKLIST_MODEL_NAME}/${EVAL_MODEL_NAME}/positive/ablation_result.json
-ABLATION_NEGATIVE_CHECKLIST_PATH=./analysis/ablation/scoring/${CHECKLIST_TYPE}:${CHECKLIST_MODEL_NAME}/${EVAL_MODEL_NAME}/negative/ablation_result.json
-MISS_ABLATION_POSITIVE_PATH=./analysis/ablation/scoring/${CHECKLIST_TYPE}:${CHECKLIST_MODEL_NAME}/${EVAL_MODEL_NAME}/positive/miss_result.json
-MISS_ABLATION_NEGATIVE_PATH=./analysis/ablation/scoring/${CHECKLIST_TYPE}:${CHECKLIST_MODEL_NAME}/${EVAL_MODEL_NAME}/negative/miss_result.json
-CHECKLIST_ABLATION_STATS_PATH=./analysis/stats/scoring/InFoBench/checklist/${CHECKLIST_MODEL_NAME}/ablation/${EVAL_MODEL_NAME}_${CHECKLIST_TYPE}.json
+POSITIVE_CHECKLIST_PATH=./analysis/classification/scoring/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/${SIMPLE_EVAL_MODEL_NAME}/checklist/positive_checklist.json
+NEGATIVE_CHECKLIST_PATH=./analysis/classification/scoring/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/${SIMPLE_EVAL_MODEL_NAME}/checklist/negative_checklist.json
+ABLATION_POSITIVE_CHECKLIST_PATH=./analysis/ablation/scoring/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/${SIMPLE_EVAL_MODEL_NAME}/positive/ablation_result.json
+ABLATION_NEGATIVE_CHECKLIST_PATH=./analysis/ablation/scoring/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/${SIMPLE_EVAL_MODEL_NAME}/negative/ablation_result.json
+MISS_ABLATION_POSITIVE_PATH=./analysis/ablation/scoring/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/${SIMPLE_EVAL_MODEL_NAME}/positive/miss_result.json
+MISS_ABLATION_NEGATIVE_PATH=./analysis/ablation/scoring/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/${SIMPLE_EVAL_MODEL_NAME}/negative/miss_result.json
+CHECKLIST_ABLATION_STATS_PATH=./analysis/stats/scoring/InFoBench/checklist/${SIMPLE_CHECKLIST_MODEL_NAME}/ablation/${SIMPLE_EVAL_MODEL_NAME}_${CHECKLIST_TYPE}.json
 
 python3 src/analysis/scoring/ablation_scoring.py \
     --question_path ${DATASET_PATH} \
