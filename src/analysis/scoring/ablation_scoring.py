@@ -55,7 +55,7 @@ def load_args():
         default = "Qwen/Qwen2.5-7B-Instruct"
     )
     args.add_argument(
-        "--base-prompt-path",
+        "--base_prompt_path",
         type=str,
         help="Path to the base prompt file. If the prompt not contains {checklist}, the checklist will be ignored.",
         default="./data/prompt/abs_evaluate_response/checklist.txt",

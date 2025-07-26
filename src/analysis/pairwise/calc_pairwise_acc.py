@@ -311,10 +311,10 @@ def main():
     bootstrap_df.to_csv(args.bootstrap_output_path, index=False)
 
 
-    with pd.ExcelWriter(args.bootstrap_output_path) as writer:
-        score_df.to_excel(writer, sheet_name="score", index=False)
-        distribution_df.to_excel(writer, sheet_name="distribution", index=False)
-        bootstrap_df.to_excel(writer, sheet_name="bootstrap", index=False)  
+    # with pd.ExcelWriter(args.bootstrap_output_path) as writer:
+    #     score_df.to_excel(writer, sheet_name="score", index=False)
+    #     distribution_df.to_excel(writer, sheet_name="distribution", index=False)
+    #     bootstrap_df.to_excel(writer, sheet_name="bootstrap", index=False)  
 
 if __name__ == "__main__":
     main()

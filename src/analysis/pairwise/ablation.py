@@ -10,7 +10,7 @@ from collections import Counter
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../src')))
 from utils.data import load_json, load_prompt, save_json, make_output_dir
 from utils.model import load_model
-from evaluate_response import request
+from experiment.evaluate_response import request
 
 logging.basicConfig(
     level=logging.INFO,
@@ -44,13 +44,13 @@ def load_args():
         default = "gpt-4o-2024-08-06"
     )
     args.add_argument(
-        "--eval_model ",
+        "--eval_model",
         type = str,
         help = "eval model",
         default = "Qwen/Qwen2.5-7B-Instruct"
     )
     args.add_argument(
-        "--base-prompt-path",
+        "--base_prompt_path",
         type=str,
         help="Path to the base prompt file. If the prompt not contains {checklist}, the checklist will be ignored.",
         default="./data/prompt/pairwise_evaluate_response/checklist.txt",
@@ -376,6 +376,7 @@ def evaluation(checklist_model, eval_model, policy):
     miss_ablation_positive_path = args.miss_ablation_positive_path.format(
         policy=policy, checklist_model=checklist_model, eval_model=model
     )
+    
 
     negative_checklist = []
     positive_checklist = []
@@ -397,10 +398,8 @@ def evaluation(checklist_model, eval_model, policy):
                 miss_ablation_negative_path
             ) or []
 
-            if not os.path.exists(ablation_negative_checklist_path):
-                logger.warning(f"Failed to save ablation negative checklist: {ablation_negative_checklist_path}")
-                make_output_dir(os.path.dirname(ablation_negative_checklist_path))
-                save_json(ablation_negative_checklist_path, ablation_negative_checklist)
+            make_output_dir(ablation_negative_checklist_path)
+            save_json(ablation_negative_checklist_path, ablation_negative_checklist)
         else:
             logger.warning(f'Worsened checklist file not found: {negative_checklist_path}')
             ablation_negative_checklist = []
@@ -417,10 +416,8 @@ def evaluation(checklist_model, eval_model, policy):
                 miss_ablation_positive_path
             ) or []
 
-            if not os.path.exists(ablation_positive_checklist_path):
-                logger.warning(f"Failed to save ablation positive checklist: {ablation_positive_checklist_path}")
-                make_output_dir(os.path.dirname(ablation_positive_checklist_path))
-                save_json(ablation_positive_checklist_path, ablation_positive_checklist)
+            make_output_dir(ablation_positive_checklist_path)
+            save_json(ablation_positive_checklist_path, ablation_positive_checklist)
         else:
             logger.warning(f'Improvement checklist file not found: {positive_checklist_path}')
             ablation_positive_checklist = []
@@ -436,8 +433,8 @@ def evaluation(checklist_model, eval_model, policy):
 
 def main():
     args = load_args()
-    checklist_model = args.checklist_model.replace("/", "_")
-    eval_model = args.eval_model .replace("/", "_")
+    # checklist_model = args.checklist_model.replace("/", "_")
+    # eval_model = args.eval_model.replace("/", "_")
     checklist_generation_policies = [
         "baseline", "adjust_0.5_baseline","adjust_1.5_baseline", 
         "ticking", "refine_baseline", "specify"
@@ -452,9 +449,9 @@ def main():
     all_stats = {}
 
     for policy in target_policies:
-        checklist_ablation_stats_path = args.checklist_ablation_stats_path.format(checklist_model=checklist_model, eval_model=eval_model,policy=policy)
+        checklist_ablation_stats_path = args.checklist_ablation_stats_path.format(checklist_model=args.checklist_model, eval_model=args.eval_model, policy=policy)
         print(f"Processing policy: {policy}")
-        stats = evaluation(checklist_model, eval_model, policy)
+        stats = evaluation(args.checklist_model, args.eval_model, policy)
         print("stats:", stats)
         all_stats[policy] = stats
 

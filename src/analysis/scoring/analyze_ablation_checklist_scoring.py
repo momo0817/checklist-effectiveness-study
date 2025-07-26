@@ -24,13 +24,13 @@ def load_args():
         default = "all"
     )
     args.add_argument(
-        "--checklist_model_name_or_path",
+        "--checklist_model",
         type = str,
         help = "generate checklist model",
         default = "gpt-4o-2024-08-06"
     )
     args.add_argument(
-        "--eval_model_name_or_path",
+        "--eval_model",
         type = str,
         help = "eval model",
         default = "Qwen/Qwen2.5-7B-Instruct"
@@ -315,8 +315,8 @@ def classificate_ablation_improvement_scores(
 
 def main():
     args = load_args()
-    checklist_model = args.checklist_model_name_or_path.replace("/", "_")
-    eval_model = args.eval_model_name_or_path.replace("/", "_")
+    checklist_model = args.checklist_model.replace("/", "_")
+    eval_model = args.eval_model.replace("/", "_")
     
     checklist_generation_policies = [
             "baseline", "adjust_0.5_baseline", "adjust_1.5_baseline", 
