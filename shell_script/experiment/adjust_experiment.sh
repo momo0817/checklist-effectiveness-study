@@ -34,7 +34,7 @@ python3 src/experiment/evaluate_response.py \
 
 echo "Generating checklist..."
 CHECKLIST_PROMPT_PATH="./data/prompt/generate_checklist/${CHECKLIST_TYPE}.txt"
-CHECKLIST_PATH="./outputs/checklist/${CHECKLIST_TYPE}/LLMBar/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
+CHECKLIST_PATH="./outputs/checklist/adjust_${CHECKLIST_TYPE}/LLMBar/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
 echo "Checklist path: ${CHECKLIST_PATH}"
 python3 src/experiment/generate_checklist.py \
     --model-name-or-path ${CHECKLIST_MODEL_NAME} \
