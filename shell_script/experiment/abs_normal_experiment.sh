@@ -42,25 +42,14 @@ python3 src/experiment/generate_checklist.py \
     --dataset-path ${DATASET_PATH} \
     --output-path ${CHECKLIST_PATH}
 
-echo "Refine checklist..."
-REFINE_CHECKLIST_PROMPT_PATH="./data/prompt/generate_checklist/refine_${CHECKLIST_TYPE}.txt"
-REFINE_CHECKLIST_PATH="./outputs/checklist/refine_${CHECKLIST_TYPE}/InFoBench/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
-echo "Refine checklist path: ${REFINE_CHECKLIST_PATH}"
-python3 src/experiment/refine_checklist.py \
-    --model-name-or-path ${CHECKLIST_MODEL_NAME} \
-    --base-prompt-path ${REFINE_CHECKLIST_PROMPT_PATH} \
-    --dataset-path ${DATASET_PATH} \
-    --base-checklist-path ${CHECKLIST_PATH} \
-    --output-path ${REFINE_CHECKLIST_PATH}
-
 echo "Evaluating with checklist..."
-CHECKLIST_EVAL_OUTPUT_PATH="./outputs/abs_evaluation/checklist/refine_${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/InFoBench/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
+CHECKLIST_EVAL_OUTPUT_PATH="./outputs/abs_evaluation/checklist/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/InFoBench/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 echo "Checklist eval output path: ${CHECKLIST_EVAL_OUTPUT_PATH}"
 python3 src/experiment/abs_evaluate_response.py \
     --model-name-or-path ${EVAL_MODEL_NAME} \
     --base-prompt-path ./data/prompt/abs_evaluate_response/checklist.txt \
     --dataset-path ${DATASET_PATH} \
-    --checklist-path ${REFINE_CHECKLIST_PATH} \
+    --checklist-path ${CHECKLIST_PATH} \
     --output-path ${CHECKLIST_EVAL_OUTPUT_PATH} \
     -n 5
 

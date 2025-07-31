@@ -9,7 +9,7 @@ fi
 CHECKLIST_MODEL_NAME=$1 # e.g. gpt-4o-2024-08-06
 EVAL_MODEL_NAME=$2 # e.g. gpt-4o-2024-08-06 or meta-llama/Llama-3.1-8B-Instruct
 CHECKLIST_TYPE=$3 # e.g. specify
-FACTOR=${5:-1.5}  
+FACTOR=${4:-1.5}  
 
 echo "Checklist model name: ${CHECKLIST_MODEL_NAME}"
 echo "Evaluation model name: ${EVAL_MODEL_NAME}"
@@ -44,7 +44,7 @@ python3 src/experiment/generate_checklist.py \
     --output-path ${CHECKLIST_PATH}
 
 echo "Adjust checklist..."
-ADJUST_CHECKLIST_PROMPT_PATH="./data/prompt/adjust_checklist/adjust_${CHECKLIST_TYPE}.txt"
+ADJUST_CHECKLIST_PROMPT_PATH="./data/prompt/generate_checklist/adjust_${CHECKLIST_TYPE}.txt"
 ADJUST_CHECKLIST_PATH="./outputs/checklist/adjust_${FACTOR}_${CHECKLIST_TYPE}/InFoBench/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
 echo "Adjust checklist path: ${ADJUST_CHECKLIST_PATH}"
 python3 src/experiment/adjust_checklist.py \

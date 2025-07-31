@@ -21,9 +21,9 @@ echo "Simple checklist model name: ${SIMPLE_CHECKLIST_MODEL_NAME}"
 echo "Simple evaluation model name: ${SIMPLE_EVAL_MODEL_NAME}"
 
 DATASET_PATH="./Dataset/LLMBar/dataset.json"
-NUM=5
-TMP_DATASET_PATH="./Dataset/LLMBar/tmp_dataset_${NUM}.json"
-jq ".[:$NUM]" "$DATASET_PATH" > "$TMP_DATASET_PATH"
+# NUM=5
+# DATASET_PATH="./Dataset/LLMBar/tmp_dataset_${NUM}.json"
+# jq ".[:$NUM]" "$DATASET_PATH" > "$DATASET_PATH"
 
 echo "Evaluating without checklist..."
 BASELINE_EVAL_OUTPUT_PATH="./outputs/evaluation/no_checklist/LLMBar/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
@@ -31,7 +31,7 @@ echo "Baseline eval output path: ${BASELINE_EVAL_OUTPUT_PATH}"
 python3 src/experiment/evaluate_response.py \
     --model-name-or-path ${EVAL_MODEL_NAME} \
     --base-prompt-path ./data/prompt/pairwise_evaluate_response/no_checklist.txt \
-    --dataset-path ${TMP_DATASET_PATH} \
+    --dataset-path ${DATASET_PATH} \
     --output-path ${BASELINE_EVAL_OUTPUT_PATH} \
     -n 10
 
@@ -42,7 +42,7 @@ echo "Checklist path: ${CHECKLIST_PATH}"
 python3 src/experiment/generate_checklist.py \
     --model-name-or-path ${CHECKLIST_MODEL_NAME} \
     --base-prompt-path ${CHECKLIST_PROMPT_PATH} \
-    --dataset-path ${TMP_DATASET_PATH} \
+    --dataset-path ${DATASET_PATH} \
     --output-path ${CHECKLIST_PATH}
 
 echo "Evaluating with checklist..."
@@ -51,7 +51,7 @@ echo "Checklist eval output path: ${CHECKLIST_EVAL_OUTPUT_PATH}"
 python3 src/experiment/evaluate_response.py \
     --model-name-or-path ${EVAL_MODEL_NAME} \
     --base-prompt-path ./data/prompt/pairwise_evaluate_response/checklist.txt \
-    --dataset-path ${TMP_DATASET_PATH} \
+    --dataset-path ${DATASET_PATH} \
     --checklist-path ${CHECKLIST_PATH} \
     --output-path ${CHECKLIST_EVAL_OUTPUT_PATH} \
     -n 10

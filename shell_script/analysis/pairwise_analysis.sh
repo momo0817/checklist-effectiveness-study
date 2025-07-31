@@ -17,9 +17,9 @@ echo "Checklist type: ${CHECKLIST_TYPE}"
 SIMPLE_CHECKLIST_MODEL_NAME=$(echo "$CHECKLIST_MODEL_NAME" | sed 's|/|_|g')
 SIMPLE_EVAL_MODEL_NAME=$(echo "$EVAL_MODEL_NAME" | sed 's|/|_|g')
 DATASET_PATH="./Dataset/LLMBar/dataset.json"
-NUM=5
-TMP_DATASET_PATH="./Dataset/LLMBar/tmp_dataset_${NUM}.json"
-jq ".[:$NUM]" "$DATASET_PATH" > "$TMP_DATASET_PATH"
+# NUM=5
+# DATASET_PATH="./Dataset/LLMBar/tmp_dataset_${NUM}.json"
+# jq ".[:$NUM]" "$DATASET_PATH" > "$DATASET_PATH"
 
 BASELINE_EVAL_OUTPUT_PATH="./outputs/evaluation/no_checklist/LLMBar/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 CHECKLIST_PATH="./outputs/checklist/${CHECKLIST_TYPE}/LLMBar/${SIMPLE_CHECKLIST_MODEL_NAME}.jsonl"
@@ -34,10 +34,10 @@ echo "Accuracy output path: ${ACCURACY_OUTPUT_PATH}"
 BOOTSTRAP_OUTPUT_PATH="./outputs/analysis/bootstrap/pairwise_results.csv"
 echo "Bootstrap output path: ${BOOTSTRAP_OUTPUT_PATH}"
 
-python3 src/analysis/pairwise/calc_pairwise_acc.py \
-    --evaluation-dir "./outputs" \
-    --accuracy-output-path ${ACCURACY_OUTPUT_PATH} \
-    --bootstrap-output-path ${BOOTSTRAP_OUTPUT_PATH}
+# python3 src/analysis/pairwise/calc_pairwise_acc.py \
+#     --evaluation-dir "./outputs" \
+#     --accuracy-output-path ${ACCURACY_OUTPUT_PATH} \
+#     --bootstrap-output-path ${BOOTSTRAP_OUTPUT_PATH}
 
 CHECKLIST_STATS_PATH="./analysis/stats/pairwise/LLMBar/checklist/${SIMPLE_CHECKLIST_MODEL_NAME}/summary/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 PREPROCESSED_EVAL_PATH="./analysis/preprocessed/pairwise/LLMBar/evaluation/checklist/${CHECKLIST_TYPE}/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
@@ -47,7 +47,7 @@ PREPROCESSED_CHECKLIST_PATH="./analysis/preprocessed/pairwise/LLMBar/checklist/$
 echo "Verifying pairwise results..."
 python3 src/analysis/pairwise/verify_checklist.py \
     --variation_type "all" \
-    --question_path ${TMP_DATASET_PATH} \
+    --question_path ${DATASET_PATH} \
     --checklist_model ${CHECKLIST_MODEL_NAME} \
     --eval_model ${EVAL_MODEL_NAME}\
     --checklist_path ${CHECKLIST_PATH} \
@@ -62,7 +62,7 @@ python3 src/analysis/pairwise/verify_checklist.py \
 # echo "Classifying subset of pairwise results..."
 # python3 src/analysis/pairwise/classificate_subset.py \
 #     --variation_type "all" \
-#     --question_path ${TMP_DATASET_PATH} \
+#     --question_path ${DATASET_PATH} \
 #     --checklist_model ${CHECKLIST_MODEL_NAME} \
 #     --checklist_path ${CHECKLIST_PATH} \
 #     --eval_model ${EVAL_MODEL_NAME}\
@@ -82,7 +82,7 @@ CHECKLIST_ABLATION_STATS_PATH=./analysis/stats/pairwise/LLMBar/checklist/${SIMPL
 
 
 python3 src/analysis/pairwise/ablation.py \
-    --question_path ${TMP_DATASET_PATH} \
+    --question_path ${DATASET_PATH} \
     --variation_type "all" \
     --checklist_model ${CHECKLIST_MODEL_NAME} \
     --eval_model ${EVAL_MODEL_NAME}\
