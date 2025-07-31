@@ -1,6 +1,6 @@
 import os
 import time
-
+import multiprocessing as mp
 import torch
 import torch.multiprocessing as mp
 from dotenv import load_dotenv
@@ -137,6 +137,8 @@ class VLLM:
 
 
 if __name__ == "__main__":
+    mp.set_start_method("spawn", force=True)
+    
     model = load_model("gpt-4o-2024-08-06")
     print("gpt-4o-2024-08-06")
     print(model("You are a helpful assistant.", "What is the capital of Tokyo?"))

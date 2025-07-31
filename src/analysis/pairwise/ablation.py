@@ -1,5 +1,3 @@
-import multiprocessing as mp
-mp.set_start_method("spawn", force=True)
 import os
 import sys
 import argparse
@@ -472,4 +470,6 @@ def main():
             print(f"Failed to save backup as well: {str(e2)}")
      
 if __name__ == '__main__':
+    import multiprocessing as mp
+    mp.set_start_method("spawn", force=True)
     main()

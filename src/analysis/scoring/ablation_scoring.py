@@ -1,6 +1,3 @@
-import multiprocessing as mp
-mp.set_start_method("spawn", force=True)
-
 import os
 import sys
 import argparse
@@ -371,6 +368,8 @@ def scoring_evaluation(checklist_model, eval_model, policy):
     return stats
         
 def main():
+    import multiprocessing as mp
+    mp.set_start_method("spawn", force=True)
     args = load_args()
     checklist_model = args.checklist_model.replace("/", "_")
     eval_model = args.eval_model.replace("/", "_")

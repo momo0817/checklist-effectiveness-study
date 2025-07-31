@@ -17,7 +17,7 @@ def load_args():
         "--question_path",
         type = str,
         help = "Path to the question",
-        default = "./LLMBar/Dataset/dataset.json"
+        default = "./Dataset/LLMBar/dataset.json"
     )
     args.add_argument(
         "--checklist_model",
