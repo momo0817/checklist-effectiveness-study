@@ -316,6 +316,16 @@ def run_ablation(args, base_prompt, dataset, checklist_model, eval_model_name,  
 
     return matched_ablation_results
 
+def safe_format_path(template, **kwargs):
+    try:
+        return template.format(**kwargs)
+    except KeyError as e:
+        logger.error(f"Path formatting error: {e}")
+        return None
+
+
+
+
 def calculate_judge_average(data):
 
     if isinstance(data, dict):
@@ -339,11 +349,8 @@ def calculate_judge_average(data):
     
     return average
 
-def evaluation(checklist_model, eval_model, policy):
+def evaluation(checklist_model, eval_model_name, eval_model, policy):
     args = load_args()
-    logger.info(f'Loading model from {args.eval_model}')
-    model = args.eval_model.replace("/", "_")
-    eval_model_name = load_model(args.eval_model)
 
     logger.info(f'Loading base prompt from: {args.base_prompt_path}')
     base_prompt = load_prompt(args.base_prompt_path)
@@ -355,25 +362,56 @@ def evaluation(checklist_model, eval_model, policy):
         return stats
 
     dataset = load_json(question_path)
+    if os.path.exists(question_path):
+        dataset = load_json(question_path)
+    else:
+        logger.warning(f"Question file not found: {question_path}")
+        dataset = []  # デフォルトで空リストにする
 
-    negative_checklist_path = args.negative_checklist_path.format(
-        policy=policy, checklist_model=checklist_model, eval_model=model
+
+    # negative_checklist_path = args.negative_checklist_path.format(
+    #     policy=policy, checklist_model=checklist_model, eval_model=eval_model_name
+    # )
+    # positive_checklist_path = args.positive_checklist_path.format(
+    #     policy=policy, checklist_model=checklist_model, eval_model=eval_model_name
+    # )
+    # ablation_negative_checklist_path = args.ablation_negative_checklist_path.format(
+    #     policy=policy, checklist_model=checklist_model, eval_model=eval_model_name
+    # )
+    # ablation_positive_checklist_path = args.ablation_positive_checklist_path.format(
+    #     policy=policy, checklist_model=checklist_model, eval_model=eval_model_name
+    # )
+    # miss_ablation_negative_path = args.miss_ablation_negative_path.format(
+    #     policy=policy, checklist_model=checklist_model, eval_model=eval_model_name
+    # )
+    # miss_ablation_positive_path = args.miss_ablation_positive_path.format(
+    #     policy=policy, checklist_model=checklist_model, eval_model=eval_model_name
+    # )
+    negative_checklist_path = safe_format_path(
+    args.negative_checklist_path, policy=policy,
+    checklist_model=checklist_model, eval_model=eval_model_name
     )
-    positive_checklist_path = args.positive_checklist_path.format(
-        policy=policy, checklist_model=checklist_model, eval_model=model
+    positive_checklist_path = safe_format_path(
+        args.positive_checklist_path, policy=policy,
+        checklist_model=checklist_model, eval_model=eval_model_name
     )
-    ablation_negative_checklist_path = args.ablation_negative_checklist_path.format(
-        policy=policy, checklist_model=checklist_model, eval_model=model
+    ablation_negative_checklist_path = safe_format_path(
+        args.ablation_negative_checklist_path, policy=policy,
+        checklist_model=checklist_model, eval_model=eval_model_name
     )
-    ablation_positive_checklist_path = args.ablation_positive_checklist_path.format(
-        policy=policy, checklist_model=checklist_model, eval_model=model
+    ablation_positive_checklist_path = safe_format_path(
+        args.ablation_positive_checklist_path, policy=policy,
+        checklist_model=checklist_model, eval_model=eval_model_name
     )
-    miss_ablation_negative_path = args.miss_ablation_negative_path.format(
-        policy=policy, checklist_model=checklist_model, eval_model=model
+    miss_ablation_negative_path = safe_format_path(
+        args.miss_ablation_negative_path, policy=policy,
+        checklist_model=checklist_model, eval_model=eval_model_name
     )
-    miss_ablation_positive_path = args.miss_ablation_positive_path.format(
-        policy=policy, checklist_model=checklist_model, eval_model=model
+    miss_ablation_positive_path = safe_format_path(
+        args.miss_ablation_positive_path, policy=policy,
+        checklist_model=checklist_model, eval_model=eval_model_name
     )
+
     
 
     negative_checklist = []
@@ -391,7 +429,7 @@ def evaluation(checklist_model, eval_model, policy):
             logger.info(f'Found {len(negative_checklist)} negative checklists')
 
             ablation_negative_checklist = run_ablation(
-                args, base_prompt, dataset, checklist_model, eval_model_name,
+                args, base_prompt, dataset, checklist_model, eval_model,
                 negative_checklist, ablation_negative_checklist_path,
                 miss_ablation_negative_path
             ) or []
@@ -409,7 +447,7 @@ def evaluation(checklist_model, eval_model, policy):
             logger.info(f'Found {len(positive_checklist)} positive checklists')
 
             ablation_positive_checklist = run_ablation(
-                args, base_prompt, dataset, checklist_model, eval_model_name,
+                args, base_prompt, dataset, checklist_model, eval_model,
                 positive_checklist, ablation_positive_checklist_path,
                 miss_ablation_positive_path
             ) or []
@@ -431,8 +469,9 @@ def evaluation(checklist_model, eval_model, policy):
 
 def main():
     args = load_args()
-    # checklist_model = args.checklist_model.replace("/", "_")
-    # eval_model = args.eval_model.replace("/", "_")
+    checklist_model = args.checklist_model.replace("/", "_")
+    eval_model_name = args.eval_model.replace("/", "_")
+    eval_model = load_model(args.eval_model)
     checklist_generation_policies = [
         "baseline", "adjust_0.5_baseline","adjust_1.5_baseline", 
         "ticking", "refine_baseline", "specify"
@@ -447,9 +486,9 @@ def main():
     all_stats = {}
 
     for policy in target_policies:
-        checklist_ablation_stats_path = args.checklist_ablation_stats_path.format(checklist_model=args.checklist_model, eval_model=args.eval_model, policy=policy)
+        checklist_ablation_stats_path = args.checklist_ablation_stats_path.format(checklist_model=checklist_model, eval_model=eval_model_name_name, policy=policy)
         print(f"Processing policy: {policy}")
-        stats = evaluation(args.checklist_model, args.eval_model, policy)
+        stats = evaluation(checklist_model, eval_model, policy)
         print("stats:", stats)
         all_stats[policy] = stats
 

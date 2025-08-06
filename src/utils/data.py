@@ -12,8 +12,18 @@ def save_json(file_path, data):
         json.dump(data, f, indent=4)
 
 def load_jsonl(file_path):
-    with open(file_path, "r") as f:
-        return [json.loads(line) for line in f]
+    data = []
+    with open(file_path, "r", encoding="utf-8") as f:
+        for i, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                data.append(json.loads(line))
+            except json.JSONDecodeError as e:
+                print(f"[Warning] JSON decode error on line {i} in {file_path}: {e}")
+    return data
+
 
 def save_jsonl(file_path, data):
     with open(file_path, "w") as f:
