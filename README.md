@@ -47,8 +47,8 @@ We can generate checklist and evaluate response using bellow shell.
     - baseline: our baseline
     - specify: we add to the baseline that checklist questions should be designed considering possible responses to the input.
     - refine_baseline:  a Likert scale evaluation and accompanying feedback based on the baseline prompt and uses this feedback to regenerate improved checklists.
-    - checklist_length_0.5: Adjust the length of the baseline checklist to 0.5 times its original size.
-    - checklist_length_1.5: Adjust the length of the baseline checklist to 1.5 times its original size.
+    - adjust_0.5_baseline: Adjust the length of the baseline checklist to 0.5 times its original size.
+    - adjust_1.5_baseline: Adjust the length of the baseline checklist to 1.5 times its original size.
     - ticking: . TICKing All the Boxes: Generated Checklists Improve LLM Evaluation and Generation's prompt 
      - their paper: https://arxiv.org/abs/2410.03608
 
@@ -105,15 +105,20 @@ We can generate checklist and evaluate response using bellow shell.
 ---
 
 ## Analysis
+We can generate checklist and evaluate response using bellow shell.
+```
+./shell_script/analysis/<dataset-type>.sh <checklist_model> <eval_model> <checklist_type>
+```
+
 
 ### Pairwise Comparison Dataset
 ```
-./shell_script/analysis/pairwise_analysis.sh
+./shell_script/analysis/pairwise_analysis.sh gpt-4o-2024-08-06 Qwen/Qwen2.5-7B-Instruct baseline
 ```
 
 ### Direct Scoring Dataset
 ```
-./shell_script/analysis/scoring_analysis.sh
+./shell_script/analysis/scoring_analysis.sh  gpt-4o-2024-08-06 Qwen/Qwen2.5-7B-Instruct baseline
 ```
 
 ## Citation
