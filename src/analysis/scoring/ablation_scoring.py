@@ -262,10 +262,9 @@ def run_scoring_ablation(args, base_prompt, dataset, checklist_model, eval_model
     
     return matched_ablation_results
 
-def scoring_evaluation(checklist_model, eval_model, policy):
+def scoring_evaluation(checklist_model, eval_model_name, eval_model, policy):
     args = load_args()
     logger.info(f'Loading model from {args.eval_model}')
-    model = load_model(args.eval_model)
     
     logger.info(f'Loading base prompt from: {args.base_prompt_path}')
     base_prompt = load_prompt(args.base_prompt_path)
@@ -287,32 +286,32 @@ def scoring_evaluation(checklist_model, eval_model, policy):
     positive_checklist_path = args.positive_checklist_path.format(
         policy=policy, 
         checklist_model=checklist_model, 
-        eval_model=eval_model
+        eval_model=eval_model_name
     )
     negative_checklist_path = args.negative_checklist_path.format(
         policy=policy, 
         checklist_model=checklist_model, 
-        eval_model=eval_model
+        eval_model=eval_model_name
     )
     ablation_positive_checklist_path = args.ablation_positive_checklist_path.format(
         policy=policy, 
         checklist_model=checklist_model, 
-        eval_model=eval_model
+        eval_model=eval_model_name
     )
     ablation_negative_checklist_path = args.ablation_negative_checklist_path.format(
         policy=policy, 
         checklist_model=checklist_model, 
-        eval_model=eval_model
+       eval_model=eval_model_name
     ) 
     miss_ablation_negative_path = args.miss_ablation_negative_path.format(
         policy=policy, 
         checklist_model=checklist_model, 
-        eval_model=eval_model
+        eval_model=eval_model_name
     )   
     miss_ablation_positive_path = args.miss_ablation_positive_path.format(
         policy=policy, 
         checklist_model=checklist_model, 
-        eval_model=eval_model
+        eval_model=eval_model_name
     )
     make_output_dir(positive_checklist_path)
     make_output_dir(negative_checklist_path)
@@ -334,7 +333,7 @@ def scoring_evaluation(checklist_model, eval_model, policy):
                 base_prompt, 
                 dataset, 
                 checklist_model, 
-                model, 
+                eval_model, 
                 positive_checklist, 
                 ablation_positive_checklist_path, 
                 miss_ablation_positive_path,
@@ -358,7 +357,7 @@ def scoring_evaluation(checklist_model, eval_model, policy):
                 base_prompt, 
                 dataset, 
                 checklist_model, 
-                model, 
+                eval_model, 
                 negative_checklist, 
                 ablation_negative_checklist_path, 
                 miss_ablation_negative_path,
@@ -385,7 +384,8 @@ def main():
     mp.set_start_method("spawn", force=True)
     args = load_args()
     checklist_model = args.checklist_model.replace("/", "_")
-    eval_model = args.eval_model.replace("/", "_")
+    eval_model_name = args.eval_model.replace("/", "_")
+    eval_model = load_model(args.eval_model)
     
     checklist_generation_policies = [
         "baseline",
@@ -413,7 +413,7 @@ def main():
         eval_model=eval_model,
         policy=policy
     )
-        stats = scoring_evaluation(checklist_model, eval_model, policy)
+        stats = scoring_evaluation(checklist_model, eval_model_name, eval_model, policy)
         all_stats[policy] = stats
 
     make_output_dir(checklist_ablation_stats_path)
