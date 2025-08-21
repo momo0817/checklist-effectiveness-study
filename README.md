@@ -124,16 +124,10 @@ We can generate checklist and evaluate response using bellow shell.
 ## Citation
 ```
 @article{furuhashi2025are,
-
   author = {Furuhashi Momoka, Nakayama Kouta, Kodama Takashi,and Sugawara Saku},
-
   title = {Are Checklists Really Useful for Automatic Evaluation of Generative Tasks?},
-
   booktitle = {The 2025 Conference on Empirical Methods in Natural Language Processing},
-
-  year = {2025},
-
-
+  year = {2025}
 }
 
 ```
