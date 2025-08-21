@@ -33,7 +33,7 @@ python3 src/analysis/scoring/calc_krippendoff_alpha.py \
     --krippendorff-output-path ${KRIPPENDORFF_OUTPUT_PATH} \
     --bootstrap-output-path ${BOOTSTRAP_OUTPUT_PATH}
 
-
+BASELINE_EVAL_OUTPUT_PATH="./outputs/evaluation/no_checklist/InFoBench/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 CHECKLIST_STATS_PATH="./analysis/stats/scoring/InFoBench/checklist/${SIMPLE_CHECKLIST_MODEL_NAME}/summary/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 PREPROCESSED_EVAL_PATH="./analysis/preprocessed/scoring/InFoBench/evaluation/checklist/${CHECKLIST_TYPE}/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
 PREPROCESSED_NO_EVAL_PATH="./analysis/preprocessed/scoring/InFoBench/evaluation/no_checklist/${CHECKLIST_TYPE}/${SIMPLE_EVAL_MODEL_NAME}.jsonl"
@@ -53,7 +53,13 @@ python3 src/analysis/scoring/verify_checklist_scoring.py \
     --preprocessed_eval_path ${PREPROCESSED_EVAL_PATH} \
     --checklist_stats_path ${CHECKLIST_STATS_PATH}
 
-# python3 src/analysis/scoring/classificate_subset_scoring.py \
+echo "Classificate Checklist..."
+python3 src/analysis/pairwise/classificate_checklis_scoring.py \
+    --variation_type "all" \
+    --question_path ${DATASET_PATH} \
+    --checklist_model ${CHECKLIST_MODEL_NAME} \
+    --eval_model ${EVAL_MODEL_NAME}\
+
 
 echo "Running ablation study..."
 POSITIVE_CHECKLIST_PATH=./analysis/classification/scoring/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/${SIMPLE_EVAL_MODEL_NAME}/checklist/positive_checklist.json

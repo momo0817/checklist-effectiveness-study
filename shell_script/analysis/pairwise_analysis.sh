@@ -59,17 +59,13 @@ python3 src/analysis/pairwise/verify_checklist.py \
     --checklist_stats_path ${CHECKLIST_STATS_PATH}
 
 
-# echo "Classifying subset of pairwise results..."
-# python3 src/analysis/pairwise/classificate_subset.py \
-#     --variation_type "all" \
-#     --question_path ${DATASET_PATH} \
-#     --checklist_model ${CHECKLIST_MODEL_NAME} \
-#     --checklist_path ${CHECKLIST_PATH} \
-#     --eval_model ${EVAL_MODEL_NAME}\
-#     --no_checklist_eval_path ${BASELINE_EVAL_OUTPUT_PATH} \
-#     --preprocessed_eval_path ${PREPROCESSED_EVAL_PATH} \
-#     --preprocessed_no_checklist_eval_path ${PREPROCESSED_NO_EVAL_PATH} \
-#     --checklist_stats_path ${CHECKLIST_STATS_PATH}
+echo "Classificate Checklist..."
+python3 src/analysis/pairwise/classificate_checklist.py \
+    --variation_type "all" \
+    --question_path ${DATASET_PATH} \
+    --checklist_model ${CHECKLIST_MODEL_NAME} \
+    --eval_model ${EVAL_MODEL_NAME}\
+
 
 echo "Running ablation study..."
 POSITIVE_CHECKLIST_PATH=./analysis/classification/pairwise/${CHECKLIST_TYPE}:${SIMPLE_CHECKLIST_MODEL_NAME}/${SIMPLE_EVAL_MODEL_NAME}/checklist/positive_checklist.json
@@ -119,3 +115,5 @@ python3 src/analysis/pairwise/analyze_ablation_checklist.py \
     --ablation_filtered_negative_checklist_path  ${ABLATION_FILTERED_NEGATIVE_PATH} \
     --negative_histgram_path  ${NEGATIVE_HISTGRAM_PATH} \
     --positive_histgram_path  ${POSITIVE_HISTGRAM_PATH} \
+
+echo "Finish!!"
