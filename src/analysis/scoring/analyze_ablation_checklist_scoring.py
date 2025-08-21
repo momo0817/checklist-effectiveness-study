@@ -242,7 +242,7 @@ def plot_histgram_statistics(ablation_improvement_scores, policy, output_path, p
     
     # 出力ディレクトリが存在しない場合は作成
     make_output_dir(os.path.dirname(output_path))
-    plt.savefig(output_path, dpi=300)  # 高解像度で保存
+    plt.savefig(output_path, dpi=300, format="pdf") 
     plt.close()
     
     print(f"Histogram saved to: {output_path}")
@@ -439,13 +439,14 @@ def main():
         pos_hist_path_all = args.positive_combined_histgram_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
         neg_hist_path_all = args.negative_combined_histgram_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
 
-        make_output_dir(pos_hist_path_all)
-        make_output_dir(neg_hist_path_all)
+        pos_dir = os.path.dirname(pos_hist_path_all)
+        neg_dir = os.path.dirname(neg_hist_path_all)
+        make_output_dir(pos_dir)
+        make_output_dir(neg_dir)
 
 
-        plot_histgram_statistics(all_positive_scores, "all", policy, pos_hist_path_all, "positive")
-        plot_histgram_statistics(all_negative_scores, "all", policy, neg_hist_path_all, "negative")
-
+        plot_histgram_statistics(all_positive_scores, policy, pos_hist_path_all, "positive")
+        plot_histgram_statistics(all_negative_scores, policy, neg_hist_path_all, "negative")
 
     print("===== Overall Summary (All Policies) =====")
     if grand_total_pos > 0:

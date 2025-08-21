@@ -43,4 +43,5 @@ def load_quesions(file_path):
 
 def make_output_dir(filepath: str):
     dir_path = os.path.dirname(filepath)
-    os.makedirs(dir_path, exist_ok=True)
+    if dir_path:
+        os.makedirs(dir_path, exist_ok=True)

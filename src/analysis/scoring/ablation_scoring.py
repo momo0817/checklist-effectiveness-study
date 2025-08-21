@@ -10,7 +10,7 @@ from pathlib import Path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../src')))
 from utils.data import  load_json, save_json, load_prompt, make_output_dir
 from utils.model import load_model
-from abs_evaluate_response import  request
+from experiment.abs_evaluate_response import  request
 
 
 logging.basicConfig(
@@ -162,6 +162,8 @@ def run_scoring_ablation(args, base_prompt, dataset, checklist_model, eval_model
     matched_ablation_results = []
     missed_ablation_results = []
     for idx, d in enumerate(tqdm(dataset)):
+        
+        print("d:",d)
         question = d['input']
         response = d['output'] 
         
@@ -268,6 +270,17 @@ def scoring_evaluation(checklist_model, eval_model, policy):
     logger.info(f'Loading base prompt from: {args.base_prompt_path}')
     base_prompt = load_prompt(args.base_prompt_path)
     stats = {}
+    question_path = args.question_path
+    if not os.path.exists(question_path):
+        logger.warning(f"Question file not found: {question_path}")
+        return stats
+    
+    dataset = load_json(question_path)
+    if os.path.exists(question_path):
+        dataset = load_json(question_path)
+    else:
+        logger.warning(f"Question file not found: {question_path}")
+        dataset = []
      
     
         
@@ -319,7 +332,7 @@ def scoring_evaluation(checklist_model, eval_model, policy):
             positive_results = run_scoring_ablation(
                 args, 
                 base_prompt, 
-                args.dataset, 
+                dataset, 
                 checklist_model, 
                 model, 
                 positive_checklist, 
@@ -343,7 +356,7 @@ def scoring_evaluation(checklist_model, eval_model, policy):
             negative_results = run_scoring_ablation(
                 args, 
                 base_prompt, 
-                args.dataset, 
+                dataset, 
                 checklist_model, 
                 model, 
                 negative_checklist, 

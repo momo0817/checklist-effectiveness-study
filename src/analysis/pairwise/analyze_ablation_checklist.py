@@ -101,7 +101,11 @@ def filter_stable_judgements(ablation_path, filtered_output_path):
 
     items = load_json(ablation_path)
     for item in tqdm(items, desc="Filtering unstable items"):
-        judges = [res["judge"] for res in item.get("dict_responses", [])]
+        responses = item.get("dict_responses", {})
+        if isinstance(responses, dict):
+            responses = responses.get("dict_responses", [])
+
+        judges = [res["judge"] for res in responses if isinstance(res, dict)]
         if len(set(judges)) > 1:
             unstable_count += 1
             continue
@@ -272,7 +276,7 @@ def plot_histgram_statistics(ablation_improvement_scores,  policy, output_path, 
     
     # 出力ディレクトリが存在しない場合は作成
     make_output_dir(os.path.dirname(output_path))
-    plt.savefig(output_path, dpi=300)  # 高解像度で保存
+    plt.savefig(output_path, dpi=300, format="pdf")  # 高解像度で保存
     plt.close()
     
     print(f"Histogram saved to: {output_path}")
@@ -328,6 +332,7 @@ def classificate_ablation_improvement_scores(
 
     # ヒストグラムと円グラフ出力
     plot_histgram_statistics(scores,  policy, hist_path, score_type)
+    
 
     return scores, checklists, final_checklist, filtered_checklist
 
@@ -381,8 +386,11 @@ def main():
         raw_neg_path = args.ablation_negative_checklist_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
 
         # フィルタ済みの一時ファイルを用意
-        tmp_filtered_pos_path = f"./tmp_filtered_pos_{policy}.json"
-        tmp_filtered_neg_path = f"./tmp_filtered_neg_{policy}.json"
+        tmp_filtered_pos_path = f" ./analysis/ablated_filtered/pairwise/{policy}:{checklist_model}/{eval_model}/positive/tmp_filtered.json"
+        tmp_filtered_neg_path = f" ./analysis/ablated_filtered/pairwise/{policy}:{checklist_model}/{eval_model}/negative/tmp_filtered.json"
+        make_output_dir(tmp_filtered_pos_path)
+        make_output_dir(tmp_filtered_neg_path)
+        
 
         _, _, _ = filter_stable_judgements(raw_pos_path, tmp_filtered_pos_path)
         _, _, _ = filter_stable_judgements(raw_neg_path, tmp_filtered_neg_path)
@@ -452,15 +460,17 @@ def main():
         grand_final_neg += policy_final_neg_count
 
         # === policy単位の統計処理（"all"用） ===
-        pos_hist_path_all = args.positive_combined_histgram_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-        neg_hist_path_all = args.negative_combined_histgram_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
-        
-        make_output_dir(pos_hist_path_all)
-        make_output_dir(neg_hist_path_all)
+        pos_hist_path_all = args.positive_histgram_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+        neg_hist_path_all = args.negative_histgram_path.format(policy=policy, checklist_model=checklist_model, eval_model=eval_model)
+
+        pos_dir = os.path.dirname(pos_hist_path_all)
+        neg_dir = os.path.dirname(neg_hist_path_all)
+        make_output_dir(pos_dir)
+        make_output_dir(neg_dir)
 
 
-        plot_histgram_statistics(all_positive_scores, "all", policy, pos_hist_path_all, "positive")
-        plot_histgram_statistics(all_negative_scores, "all", policy, neg_hist_path_all, "negative")
+        plot_histgram_statistics(all_positive_scores, policy, pos_hist_path_all, "positive")
+        plot_histgram_statistics(all_negative_scores, policy, neg_hist_path_all, "negative")
     
     
     print("===== Overall Summary (All Policies) =====")
