@@ -486,9 +486,9 @@ def main():
     all_stats = {}
 
     for policy in target_policies:
-        checklist_ablation_stats_path = args.checklist_ablation_stats_path.format(checklist_model=checklist_model, eval_model=eval_model_name_name, policy=policy)
+        checklist_ablation_stats_path = args.checklist_ablation_stats_path.format(checklist_model=checklist_model, eval_model=eval_model_name, policy=policy)
         print(f"Processing policy: {policy}")
-        stats = evaluation(checklist_model, eval_model, policy)
+        stats = evaluation(checklist_model, eval_model_name, eval_model, policy)
         print("stats:", stats)
         all_stats[policy] = stats
 

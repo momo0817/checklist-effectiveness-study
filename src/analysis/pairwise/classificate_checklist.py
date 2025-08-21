@@ -44,12 +44,6 @@ def load_args():
         help = "eval model",
         default = "Qwen/Qwen2.5-7B-Instruct"
     )
-    parser.add_argument(
-        "--inconsistency_threshold",
-        type = int,
-        help = "inconsistency_threshold",
-        default = 9
-    )
     
     args = parser.parse_args()
 
@@ -246,10 +240,9 @@ def classificate_checklist_improvement(checklist_model, eval_model, policy,thres
         checklist = checklist_item.get("checklist", [])
         gold_label = question['label']
 
-        print("Gold label:", gold_label)
         # チェックリストなし評価の平均を計算
         no_checklist_ratings = []
-        for key in ["eval_responses"]:
+        for key in ["dict_responses"]:
             no_checklist_ratings.extend(
                 response.get("rating") or response.get("judge") 
                 for response in no_checklist.get(key, []) 
@@ -259,7 +252,7 @@ def classificate_checklist_improvement(checklist_model, eval_model, policy,thres
         
         # チェックリストあり評価の平均を計算
         checklist_ratings = []
-        for key in ["eval_responses"]:
+        for key in ["dict_responses"]:
             checklist_ratings.extend(
                 response.get("rating") or response.get("judge") 
                 for response in eval_data_item.get(key, []) 
@@ -283,6 +276,7 @@ def classificate_checklist_improvement(checklist_model, eval_model, policy,thres
                     threshold,
                     stats_json_path
                 )
+                all_statistics[question_key] = statistics
                 # 大幅な改善
                 improvement_results["positive_checklists"][question_key] = {
                     "checklist": checklist,
@@ -301,7 +295,8 @@ def classificate_checklist_improvement(checklist_model, eval_model, policy,thres
                     "checklist_avg": ave_checklist,
                     "improvement_score": improvement_score
                 }
-        
+        if policy not in all_stats:
+            all_stats[policy] = {}
         # 改善スコアの統計情報
         avg_improvement = sum(improvement_scores) / len(improvement_scores) if improvement_scores else 0
         all_stats[policy] = {
@@ -313,7 +308,6 @@ def classificate_checklist_improvement(checklist_model, eval_model, policy,thres
             "negative_ratio": round(len(improvement_results["negative_checklists"]) / len(improvement_scores) if improvement_scores else 0, 3),
             "threshold_used": threshold,
         }
-        
         
         save_json(positive_checklist_path, improvement_results["positive_checklists"])
         save_json(negative_checklist_path, improvement_results["negative_checklists"])
@@ -338,23 +332,24 @@ def classificate_checklist_improvement(checklist_model, eval_model, policy,thres
         # タイトルとして渡す
         combined_statistics = plot_and_save_improvement_statistics(
             all_improvement_scores, 
-            "All Subsets", 
             display_policy, 
             histogram_path, 
             threshold,
             stats_json_path
         )
-        all_stats["combined"] = {
-        "avg_improvement_score": round(np.mean(all_improvement_scores), 3),
-        "positive_count": combined_statistics["positive"]["count"],
-        "negative_count": combined_statistics["negative"]["count"],
-        "neutral_count": combined_statistics["neutral"]["count"],
-        "total_count": combined_statistics["total_samples"],
-        "positive_ratio": round(combined_statistics["positive"]["percentage"] / 100, 3),
-        "negative_ratio": round(combined_statistics["negative"]["percentage"] / 100, 3),
-        "neutral_ratio": round(combined_statistics["neutral"]["percentage"] / 100, 3),
-        "threshold_used": threshold,
-    }
+
+        # all_stats["combined"] = {
+        # "avg_improvement_score": round(np.mean(all_improvement_scores), 3),
+        # "positive_count": combined_statistics["positive"]["count"],
+        # "negative_count": combined_statistics["negative"]["count"],
+        # "neutral_count": combined_statistics["neutral"]["count"],
+        # "total_count": combined_statistics["total_samples"],
+        # "positive_ratio": round(combined_statistics["positive"]["percentage"] / 100, 3),
+        # "negative_ratio": round(combined_statistics["negative"]["percentage"] / 100, 3),
+        # "neutral_ratio": round(combined_statistics["neutral"]["percentage"] / 100, 3),
+        # "threshold_used": threshold,
+        # }
+        all_statistics["combined"] = combined_statistics
     # 全体の統計情報を保存
     stats_path = args.checklist_improvement_stats_path.format(
         policy=policy, 

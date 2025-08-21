@@ -159,7 +159,11 @@ def load_checklist_experiments(evaluation_dir, ignore_questions):
         model_name = model_name.replace("_", "/")
 
         check_eval_data = load_jsonl(file_path)
-        check_eval_data = filter_data(check_eval_data, ignore_questions[dataset_name])
+        check_eval_data = filter_data(
+            check_eval_data,
+            ignore_questions.get(dataset_name, [])
+        )
+
         print(
             f"Checklist: {dataset_name}, {model_name}, {checklist_type}, {checklist_model_name}, len: {len(check_eval_data)}"
         )
@@ -317,7 +321,7 @@ def main():
     dist_header.append("w/ checklist")
     dist_header.append("total")
 
-    os.makedirs(os.path.dirname(args.krippendorff_krippendorff_output_path), exist_ok=True)
+    os.makedirs(os.path.dirname(args.krippendorff_output_path), exist_ok=True)
 
     # Convert tables to DataFrames
     score_df = pd.DataFrame(table, columns=header)
@@ -325,11 +329,6 @@ def main():
     bootstrap_df = pd.DataFrame(bootstrap_summary)
     bootstrap_df.to_csv(args.bootstrap_output_path, index=False)
 
-    # Write DataFrames to Excel file with separate sheets
-    with pd.ExcelWriter(args.krippendorff_krippendorff_output_path) as writer:
-        score_df.to_excel(writer, sheet_name="score", index=False)
-        distribution_df.to_excel(writer, sheet_name="distribution", index=False)
-        bootstrap_df.to_excel(args.bootstrap_output_path, index=False)
 
 
 if __name__ == "__main__":
