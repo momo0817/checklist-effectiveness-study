@@ -338,17 +338,6 @@ def classificate_checklist_improvement(checklist_model, eval_model, policy,thres
             stats_json_path
         )
 
-        # all_stats["combined"] = {
-        # "avg_improvement_score": round(np.mean(all_improvement_scores), 3),
-        # "positive_count": combined_statistics["positive"]["count"],
-        # "negative_count": combined_statistics["negative"]["count"],
-        # "neutral_count": combined_statistics["neutral"]["count"],
-        # "total_count": combined_statistics["total_samples"],
-        # "positive_ratio": round(combined_statistics["positive"]["percentage"] / 100, 3),
-        # "negative_ratio": round(combined_statistics["negative"]["percentage"] / 100, 3),
-        # "neutral_ratio": round(combined_statistics["neutral"]["percentage"] / 100, 3),
-        # "threshold_used": threshold,
-        # }
         all_statistics["combined"] = combined_statistics
     # 全体の統計情報を保存
     stats_path = args.checklist_improvement_stats_path.format(
